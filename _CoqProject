@@ -1,0 +1,9 @@
+-R coq/ HolonomyRuntime
+-arg -w -arg -deprecated-hint-without-locality
+
+coq/BaseTernary.v
+coq/Manifold80D.v
+coq/Proofs/CurvatureEvolution.v
+coq/Proofs/Holonomy.v
+coq/Proofs/RuntimeFusion.v
+coq/Proofs/SpectralIntegration.v
