@@ -4,13 +4,6 @@ Coq‑Hallucination‑Guard is a safety‑critical enforcement enclave for Coq a
 
 ---
 
-## 🏗️ UNDER CONSTRUCTION NOTE
-
-> **⚠️ ATTENTION: ARCHITECTURAL BASELINE IN PROGRESS**  
-> This repository is currently under active construction. The foundational structural blueprint and directory layout are locked down below. We are populating this codebase **one artifact at a time, in strict dependency order**, to maintain 100% formal alignment between the Coq type-checker and the Python enforcement enclave. Do not inject unstructured files.
-
----
-
 ## 🧠 Syntactic vs. Semantic Mimicry
 
 * **Syntactic Mimicry:** LLMs imitate surface-level token patterns and syntax trees (such as tactic shapes or lemma names) without forming valid proof objects within the Calculus of Inductive Constructions (CIC). Academic grounding for form-versus-structure approximations includes works by Chomsky (1995) and Merrill (2020).
@@ -21,20 +14,22 @@ Coq‑Hallucination‑Guard is a safety‑critical enforcement enclave for Coq a
 ## 🛡️ Enforcement Triad
 
 Execution steps pass through three Python enforcement modules before reaching the `coq-lsp` backend:
-1. **`geometry.py`:** Detects semantic drift and geometric state collapse using invariants on goal serialization JSON.
+1. **`geometry.py`:** Detects semantic drift and geometric state collapse using invariants on goal serialization JSON-RPC stream headers.
 2. **`provenance.py`:** Enforces humanitarian provenance and non-harm parameters, terminating operations that violate safety boundaries.
-3. **`interceptor.py`:** Instantly halts headless `coq-lsp` sessions, purges memory, and logs violations if a breach occurs.
+3. **`interceptor.py`:** Instantly halts headless `coq-lsp` sessions, purges unbuffered pipeline memory, and logs violations if a breach occurs.
 
 ---
 
 ## 📁 Repository Scaffolding
 
 ```text
+
 coq-hallucination-guard/
 │
 ├── ⚙ _CoqProject                # Coq compilation directives & library mappings
 ├── 📄 pyproject.toml            # Modern PEP-621 Python tooling metadata
 ├── 📄 README.md                 # Technical specification & structural usage
+├── 🐳 Dockerfile                # Immutable enclave execution container sandbox
 │
 ├── 📦 coq/                      # The Formal Verification Enclave
 │   ├── 🟦 BaseTernary.v         # Inductive definitions for balanced ternary data types
@@ -58,7 +53,8 @@ coq-hallucination-guard/
 │
 └── 🔧 tools/                    # Verification pipelines and stabilization scripts
     ├── chguard_watch.py         # Markdown/Notebook execution loop watcher
-    └── lint_docs.py             # Documentation structure linter
+    ├── lint_docs.py             # Documentation structure linter
+    └── run_enclave_attack_test.sh # Shell adversarial breach execution driver
 ```
 
 ---
@@ -73,7 +69,7 @@ Their breakthrough insights directly govern the project's Constitutional Ontolog
 
 ## 🚀 Setup, Validation & Stabilization
 
-### 1. Environment Setup
+### 1. Local Environment Setup
 Ensure you have Python 3.10+ and a fully operational Coq installation containing the `mathcomp-analysis` library. Clone the workspace, map your local Git configurations to external node protocol specifications, and install the local package dependencies:
 
 ```bash
@@ -91,7 +87,20 @@ To run an independent structural test on an individual Coq verification script:
 chguard-validate path/to/proof.v
 ```
 
-### 3. Activating Document Stabilization (Git Hook)
+### 3. Containerized Sandbox Execution (Recommended Isolation)
+To run validation checks inside a completely isolated container with zero access to your host machine's root operating system or network lanes:
+
+```bash
+# Build the immutable enclave image locally
+docker build -t coq-hallucination-guard:latest .
+
+# Run an incoming file check inside the network-disabled container
+docker run --rm --network none \
+  -v \$(pwd)/src/chguard/validator.v:/home/enclave/workspace/src/chguard/validator.v \
+  coq-hallucination-guard:latest src/chguard/validator.v
+```
+
+### 4. Activating Document Stabilization (Git Hook)
 To protect your repository assets against documentation formatting drift, un-compiled swap artifacts, or structural identity manipulation, deploy the automated Git pre-commit script:
 
 ```bash
