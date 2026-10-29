@@ -1,28 +1,48 @@
-# 🛡️ Coq‑Hallucination‑Guard (chguard)
+ # 🛡️ Coq‑Hallucination‑Guard (chguard)
 
-Coq‑Hallucination‑Guard is a safety‑critical enforcement enclave for Coq and the Ssreflect proof language. It utilizes geometric stability checks, provenance constraints, and deterministic abort logic via `coq-lsp` serialization to prevent syntactic and semantic mimicry in LLM-generated proofs.
+Coq‑Hallucination‑Guard is a safety‑critical enforcement enclave for Coq and the Ssreflect proof language. It integrates geometric stability invariants, provenance constraints, and deterministic abort logic through coq-lsp serialization to prevent syntactic and semantic mimicry in LLM‑generated proofs.
 
----
-
-## 🧠 Syntactic vs. Semantic Mimicry
-
-* **Syntactic Mimicry:** LLMs imitate surface-level token patterns and syntax trees (such as tactic shapes or lemma names) without forming valid proof objects within the Calculus of Inductive Constructions (CIC). Academic grounding for form-versus-structure approximations includes works by Chomsky (1995) and Merrill (2020).
-* **Semantic Mimicry:** Models simulate reasoning-shaped text continuation (like fake lemma applications or goal closures) without actual execution on the goal stack, leading to semantic drift. References discussing form versus meaning and symbolic reasoning failures include Bender & Koller (2020), Piantadosi & Hill (2022), Chiang & Cholak (2023), and Wu et al. (2024).
+The system ensures that every incoming proof object is evaluated against a hallucination‑resistant geometric manifold, preventing Flyxion‑style metric collapse, curvature explosions, drift cascades, and spectral instability.
 
 ---
 
-## 🛡️ Enforcement Triad
+🧠 Syntactic vs. Semantic Mimicry
 
-Execution steps pass through three Python enforcement modules before reaching the `coq-lsp` backend:
-1. **`geometry.py`:** Detects semantic drift and geometric state collapse using invariants on goal serialization JSON-RPC stream headers.
-2. **`provenance.py`:** Enforces humanitarian provenance and non-harm parameters, terminating operations that violate safety boundaries.
-3. **`interceptor.py`:** Instantly halts headless `coq-lsp` sessions, purges unbuffered pipeline memory, and logs violations if a breach occurs.
+Syntactic Mimicry
+LLMs imitate surface‑level token patterns (tactic shapes, lemma names, proof scripts) without producing valid CIC proof objects.  
+Relevant academic grounding includes Chomsky (1995), Merrill (2020).
+
+Semantic Mimicry
+Models simulate reasoning‑shaped text continuation (fake lemma applications, fabricated goal closures) without executing on the actual goal stack.  
+Key references include Bender & Koller (2020), Piantadosi & Hill (2022), Chiang & Cholak (2023), Wu et al. (2024).
+
+Coq‑Hallucination‑Guard prevents both failure modes by enforcing geometric invariants on the serialized goal state.
 
 ---
 
-## 📁 Repository Scaffolding
+🛡️ Enforcement Triad
 
-```text
+All incoming Coq proof attempts pass through three Python enforcement modules before reaching the coq-lsp backend:
+
+1. geometry.py  
+   Detects semantic drift, metric collapse, and curvature instability using FSFE‑aligned invariants on the JSON‑RPC goal stream.
+
+2. provenance.py  
+   Enforces humanitarian provenance, non‑harm constraints, and Node Beta lineage rules.  
+   Any violation triggers immediate termination.
+
+3. interceptor.py  
+   Halts headless coq-lsp sessions, purges unbuffered pipeline memory, and logs violations.
+
+This triad ensures that no hallucinated proof object can enter the Coq kernel.
+
+---
+
+📁 Repository Scaffolding
+
+`text
+<pre> 
+    
 coq-hallucination-guard/
 │
 ├── ⚙ _CoqProject                # Coq compilation directives & library mappings
@@ -32,24 +52,30 @@ coq-hallucination-guard/
 │
 ├── 📦 coq/                      # The Formal Verification Enclave
 │   ├── 🟦 BaseTernary.v         # Inductive definitions for balanced ternary data types
-│   ├── 🟦 Manifold80D.v         # Soft 80D Riemannian manifold structural framework
+│   ├── 🟦 Manifold80D.v         # FSFE-aligned 80D Soft Riemannian Manifold with A6/A7/A8 invariants:
+│   │                               - triangle inequality enforcement
+│   │                               - slack-dimension soft geometry
+│   │                               - collapse-surface stability
+│   │                               - holonomy compatibility
+│   │                               - curvature monotonicity
+│   │                               - spectral integration bounds
 │   ├── 🟦 Extraction.v          # OCaml code extraction compilation directives
 │   │
 │   └── 🧮 Proofs/
-│       ├── CurvatureEvolution.v # Proofs of smoothness across threshold jumps
+│       ├── CurvatureEvolution.v # Smoothness across threshold jumps
 │       ├── Holonomy.v           # Unitarity and stability metrics for loop transport
 │       ├── RuntimeFusion.v      # Verification of branchless lane reduction
 │       └── SpectralIntegration.v # Operational bounds via functional calculus
 │
 ├── 📘 docs/                     # Conceptual documentation & high-altitude models
 │   ├── 📄 bill-nye-tile-explainer.md
-│   └── 📄 Appendix_NodeBeta_Consolidated_Framework.tex
+│   └── 📄 AppendixNodeBetaConsolidated_Framework.tex
 │
 ├── 🖺 tex/                      # Mathematical manuscripts and LaTeX assets
-│   └── 📄 Appendix_AntiSoftmax_Alignment_Framework.tex
+│   └── 📄 AppendixAntiSoftmaxAlignment_Framework.tex
 │
 ├── 🐍 src/chguard/              # Python & Machine-Speed Functional Target Layer
-│   ├── __init__.py
+│   ├── init.py
 │   ├── geometry.py              # Parses Coq AST/XML to track goal-state drift
 │   ├── provenance.py            # Enforces humanitarian non-harm license rules
 │   ├── interceptor.py           # Handles coq-lsp sessions and kills hallucinated tasks
@@ -60,103 +86,76 @@ coq-hallucination-guard/
 └── 🔧 tools/                    # Verification pipelines and stabilization scripts
     ├── chguard_watch.py         # Markdown/Notebook execution loop watcher
     ├── lint_docs.py             # Documentation structure linter
-    ├── run_enclave_attack_test.sh # Shell adversarial breach execution driver
+    ├── runenclaveattack_test.sh # Shell adversarial breach execution driver
     └── deploy_enclave.sh        # Master enclave pipeline and deployment orchestrator
-```
+`
+
+</pre>
+---
+
+🤝 Acknowledgements
+
+Special gratitude to Christopher Chenoweth and Peter Lodri of the Trinity Squad for foundational work on Ternary Resonance and complex system consolidation. Their structural ontology (ONTOLOGY.md) governs the balanced ternary invariants ({-1, 0, +1}) used throughout the geometric layers.
 
 ---
 
-## 🤝 Acknowledgements
+🚀 Setup, Validation & Stabilization
 
-Special gratitude is extended to **Christopher Chenoweth** and **Peter Lodri** of the Trinity Squad for their foundational work on **Ternary Resonance into complex system consolidation**. 
+1. Local Environment Setup
 
-Their breakthrough insights directly govern the project's Constitutional Ontology (`ONTOLOGY.md`). By formalizing the structural alignment between balanced ternary states (`{-1, 0, +1}`) and complex system invariants, their work provides the exact stabilizing mechanics used to map, gate, and consolidate information within our multi-agent geometric layers.
-
----
-
-## 🚀 Setup, Validation & Stabilization
-
-### 1. Local Environment Setup
-Ensure you have Python 3.10+ and a fully operational Coq/OCaml installation containing the `mathcomp-analysis` library. Clone the workspace, map your local Git configurations to external node protocol specifications, and install the local package dependencies:
-
-```bash
-# Configure local identity parameters to align with External Peer Node Beta protocol
+`bash
 git config --local user.name "Downstream Enclave Observer (Node Beta)"
 git config --local user.email "chguard-sentinel@vaked.dev"
 
-# Install the Python enforcement components in editable development mode
 pip install -e .
-```
+`
 
-### 2. Manual Verification & Code Extraction Check
-To run an independent structural test on an individual Coq script or trigger the compilation loop that extracts fresh OCaml source structures:
-```bash
-# Force the system Makefile to regenerate and process code extraction
-coq_makefile -f _CoqProject -o Makefile && make clean && make
-```
+2. Manual Verification & Code Extraction
 
-### 3. Automated Enclave Pipeline Orchestrator (Comprehensive Check)
-To sequentially execute documentation linting, local Coq compilation checks, native OCaml code extraction generation, sandbox Docker builds, and adversarial simulation suite tests in an atomic execution sweep:
-```bash
-# Provide native system execution permissions
+`bash
+coqmakefile -f CoqProject -o Makefile && make clean && make
+`
+
+3. Full Enclave Pipeline
+
+`bash
 chmod +x tools/deploy_enclave.sh
-
-# Run the master deployment pipeline loop
 ./tools/deploy_enclave.sh
-```
+`
 
-### 4. Containerized Sandbox Execution (Isolated Mode)
-To run validation checks inside a completely isolated container with zero access to your host machine's root operating system or network lanes:
+4. Containerized Sandbox Execution
 
-```bash
-# Build the immutable enclave image locally
+`bash
 docker build -t coq-hallucination-guard:latest .
 
-# Run an incoming file check inside the network-disabled container
 docker run --rm --network none \
-  -v \$(pwd)/src/chguard/validator.v:/home/enclave/workspace/src/chguard/validator.v \
+  -v $(pwd)/src/chguard/validator.v:/home/enclave/workspace/src/chguard/validator.v \
   coq-hallucination-guard:latest src/chguard/validator.v
-```
+`
 
-### 5. Activating Document Stabilization (Git Hook)
-To protect your repository assets against documentation formatting drift, un-compiled swap artifacts, or structural identity manipulation, deploy the automated Git pre-commit script:
+5. Git Pre‑Commit Stabilization Hook
 
-```bash
-# Formulate the hook file within the hidden git infrastructure
+`bash
 cat << 'EOF' > .git/hooks/pre-commit
-#!/bin/sh
-# =====================================================================
-# Git Pre-Commit Hook: Automated Enclave Documentation Stabilization
-# =====================================================================
 
-echo "[HOOK] Triggering pre-commit validation enclaves..."
-
-# 1. Run the structural documentation linter script
-python3 tools/lint_docs.py
-if [ \$? -ne 0 ]; then
-    echo "\n[HOOK ABORT] Document stabilization checks failed. Commit rejected."
-    exit 1
+!/bin/sh
+python3 tools/lint_docs.py || { echo "[HOOK ABORT] Documentation failed."; exit 1; }
+if git diff --cached --name-only | grep -E '\.(bak|tmp|swp)$'; then
+    echo "[HOOK ABORT] Swap files detected."; exit 1;
 fi
-
-# 2. Prevent accidental tracking of temporary editor swap artifacts
-if git diff --cached --name-only | grep -E '\.(bak|tmp|swp)\$'; then
-    echo "\n[HOOK ABORT] Detected temporary swap files in the staging area. Commit rejected."
-    exit 1
-fi
-
-echo "[HOOK SUCCESS] Staging area cleared. Proceeding to cryptographic sign-off."
-exit 0
+echo "[HOOK SUCCESS] Proceeding to cryptographic sign-off."
 EOF
 
-# Grant absolute system execution permissions to the script file
 chmod +x .git/hooks/pre-commit
-```
+`
 
 ---
 
-## ⭐ Bill Nye Tile Says…
+⭐ Bill Nye Tile Says…
 
 > “Kids!  
 > When math gets a proper home, it becomes easier to explore.  
-> `chguard` acts like a lock on the door of our big, soft, 80‑dimensional house—making sure the AI doesn't write fake equations on the walls!”
-Use code with caution.
+> chguard acts like a lock on the door of our big, soft, 80‑dimensional house—making sure the AI doesn't write fake equations on the walls!”
+
+---
+
