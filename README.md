@@ -33,6 +33,7 @@ coq-hallucination-guard/
 ├── 📦 coq/                      # The Formal Verification Enclave
 │   ├── 🟦 BaseTernary.v         # Inductive definitions for balanced ternary data types
 │   ├── 🟦 Manifold80D.v         # Soft 80D Riemannian manifold structural framework
+│   ├── 🟦 Extraction.v          # OCaml code extraction compilation directives
 │   │
 │   └── 🧮 Proofs/
 │       ├── CurvatureEvolution.v # Proofs of smoothness across threshold jumps
@@ -47,12 +48,14 @@ coq-hallucination-guard/
 ├── 🖺 tex/                      # Mathematical manuscripts and LaTeX assets
 │   └── 📄 Appendix_AntiSoftmax_Alignment_Framework.tex
 │
-├── 🐍 src/chguard/              # Python Deterministic Enforcement Layer
+├── 🐍 src/chguard/              # Python & Machine-Speed Functional Target Layer
 │   ├── __init__.py
 │   ├── geometry.py              # Parses Coq AST/XML to track goal-state drift
 │   ├── provenance.py            # Enforces humanitarian non-harm license rules
 │   ├── interceptor.py           # Handles coq-lsp sessions and kills hallucinated tasks
-│   └── validator.v              # Coq sandbox workspace script for incoming inputs
+│   ├── validator.v              # Coq sandbox workspace script for incoming inputs
+│   ├── extracted_ternary.ml     # Materialized verified OCaml functional core
+│   └── extracted_ternary.mli    # Materialized verified OCaml module interface
 │
 └── 🔧 tools/                    # Verification pipelines and stabilization scripts
     ├── chguard_watch.py         # Markdown/Notebook execution loop watcher
@@ -74,7 +77,7 @@ Their breakthrough insights directly govern the project's Constitutional Ontolog
 ## 🚀 Setup, Validation & Stabilization
 
 ### 1. Local Environment Setup
-Ensure you have Python 3.10+ and a fully operational Coq installation containing the `mathcomp-analysis` library. Clone the workspace, map your local Git configurations to external node protocol specifications, and install the local package dependencies:
+Ensure you have Python 3.10+ and a fully operational Coq/OCaml installation containing the `mathcomp-analysis` library. Clone the workspace, map your local Git configurations to external node protocol specifications, and install the local package dependencies:
 
 ```bash
 # Configure local identity parameters to align with External Peer Node Beta protocol
@@ -85,14 +88,15 @@ git config --local user.email "chguard-sentinel@vaked.dev"
 pip install -e .
 ```
 
-### 2. Manual Verification Check
-To run an independent structural test on an individual Coq verification script:
+### 2. Manual Verification & Code Extraction Check
+To run an independent structural test on an individual Coq script or trigger the compilation loop that extracts fresh OCaml source structures:
 ```bash
-chguard-validate path/to/proof.v
+# Force the system Makefile to regenerate and process code extraction
+coq_makefile -f _CoqProject -o Makefile && make clean && make
 ```
 
 ### 3. Automated Enclave Pipeline Orchestrator (Comprehensive Check)
-To sequentially execute documentation linting, local Coq compilation checks, sandbox Docker builds, and adversarial simulation suite tests in an atomic execution sweep:
+To sequentially execute documentation linting, local Coq compilation checks, native OCaml code extraction generation, sandbox Docker builds, and adversarial simulation suite tests in an atomic execution sweep:
 ```bash
 # Provide native system execution permissions
 chmod +x tools/deploy_enclave.sh
