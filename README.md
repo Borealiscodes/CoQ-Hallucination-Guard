@@ -23,6 +23,7 @@ Execution steps pass through three Python enforcement modules before reaching th
 📁 Repository Scaffolding
 
 text
+<pre>
 coq-hallucination-guard/
 │
 ├── ⚙ _CoqProject                # Coq compilation directives & library mappings
@@ -48,7 +49,8 @@ coq-hallucination-guard/
 │
 ├── 📄 pyproject.toml            # Modern PEP-621 Python tooling metadata
 └── 📄 README.md                 # Technical specification & structural usage
-Use code with caution.
+
+</pre>
 
 🤝 Acknowledgements
 
