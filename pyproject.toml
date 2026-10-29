@@ -21,3 +21,10 @@ dependencies = [
 
 [project.scripts]
 chguard-validate = "chguard.interceptor:main"
+
+
+[project.metadata.ecosystem]
+charter_version = "1.1"
+enforcement_node = "External Peer Node Beta"
+lineage_alignment = ["NDH", "ANIMA-Hologram", "Shared-Horizon"]
+provenance_key = "chguard-sentinel@vaked.dev"
