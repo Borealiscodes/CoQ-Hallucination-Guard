@@ -1,0 +1,22 @@
+#!/bin/sh
+# =====================================================================
+# Git Pre-Commit Hook: Automated Enclave Documentation Stabilization
+# =====================================================================
+
+echo "[HOOK] Triggering pre-commit validation enclaves..."
+
+# 1. Run the structural documentation linter script
+python3 tools/lint_docs.py
+if [ $? -ne 0 ]; then
+    echo "\n[HOOK ABORT] Document stabilization checks failed. Commit rejected."
+    exit 1
+fi
+
+# 2. Prevent accidental tracking of un-compiled or temporary editor swap artifacts
+if git diff --cached --name-only | grep -E '\.(bak|tmp|swp)$'; then
+    echo "\n[HOOK ABORT] Detected temporary swap files in the staging area. Commit rejected."
+    exit 1
+fi
+
+echo "[HOOK SUCCESS] Staging area cleared. Proceeding to cryptographic sign-off."
+exit 0
