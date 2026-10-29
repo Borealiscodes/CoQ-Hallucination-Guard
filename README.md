@@ -23,7 +23,6 @@ Execution steps pass through three Python enforcement modules before reaching th
 ## 📁 Repository Scaffolding
 
 ```text
-
 coq-hallucination-guard/
 │
 ├── ⚙ _CoqProject                # Coq compilation directives & library mappings
@@ -42,7 +41,11 @@ coq-hallucination-guard/
 │       └── SpectralIntegration.v # Operational bounds via functional calculus
 │
 ├── 📘 docs/                     # Conceptual documentation & high-altitude models
-│   └── 📄 bill-nye-tile-explainer.md
+│   ├── 📄 bill-nye-tile-explainer.md
+│   └── 📄 Appendix_NodeBeta_Consolidated_Framework.tex
+│
+├── 🖺 tex/                      # Mathematical manuscripts and LaTeX assets
+│   └── 📄 Appendix_AntiSoftmax_Alignment_Framework.tex
 │
 ├── 🐍 src/chguard/              # Python Deterministic Enforcement Layer
 │   ├── __init__.py
@@ -54,7 +57,8 @@ coq-hallucination-guard/
 └── 🔧 tools/                    # Verification pipelines and stabilization scripts
     ├── chguard_watch.py         # Markdown/Notebook execution loop watcher
     ├── lint_docs.py             # Documentation structure linter
-    └── run_enclave_attack_test.sh # Shell adversarial breach execution driver
+    ├── run_enclave_attack_test.sh # Shell adversarial breach execution driver
+    └── deploy_enclave.sh        # Master enclave pipeline and deployment orchestrator
 ```
 
 ---
@@ -87,7 +91,17 @@ To run an independent structural test on an individual Coq verification script:
 chguard-validate path/to/proof.v
 ```
 
-### 3. Containerized Sandbox Execution (Recommended Isolation)
+### 3. Automated Enclave Pipeline Orchestrator (Comprehensive Check)
+To sequentially execute documentation linting, local Coq compilation checks, sandbox Docker builds, and adversarial simulation suite tests in an atomic execution sweep:
+```bash
+# Provide native system execution permissions
+chmod +x tools/deploy_enclave.sh
+
+# Run the master deployment pipeline loop
+./tools/deploy_enclave.sh
+```
+
+### 4. Containerized Sandbox Execution (Isolated Mode)
 To run validation checks inside a completely isolated container with zero access to your host machine's root operating system or network lanes:
 
 ```bash
@@ -100,7 +114,7 @@ docker run --rm --network none \
   coq-hallucination-guard:latest src/chguard/validator.v
 ```
 
-### 4. Activating Document Stabilization (Git Hook)
+### 5. Activating Document Stabilization (Git Hook)
 To protect your repository assets against documentation formatting drift, un-compiled swap artifacts, or structural identity manipulation, deploy the automated Git pre-commit script:
 
 ```bash
@@ -141,3 +155,4 @@ chmod +x .git/hooks/pre-commit
 > “Kids!  
 > When math gets a proper home, it becomes easier to explore.  
 > `chguard` acts like a lock on the door of our big, soft, 80‑dimensional house—making sure the AI doesn't write fake equations on the walls!”
+Use code with caution.
