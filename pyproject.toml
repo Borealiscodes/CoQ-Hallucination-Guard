@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coq-hallucination-guard"
+version = "1.2.0"
+description = "Deterministic enforcement layer for AI reasoning in Coq/Ssreflect proofs"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: OCaml",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Security"
+]
+dependencies = [
+    "pydantic>=2.0.0",
+    "pygls>=1.0.0"
+]
+
+[project.scripts]
+chguard-validate = "chguard.interceptor:main"
