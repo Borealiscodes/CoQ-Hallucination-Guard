@@ -1,0 +1,155 @@
+% =====================================================================
+% TECHNICAL MANUSCRIPT: ALIGNMENT ENCLAVE & COLLAPSE-SURFACE GEOMETRY
+% Project: Coq-Hallucination-Guard (chguard) × VAKED Attestation Layer
+% Document Class: Academic-Galactic Technical Specification v3.0
+% Tracked Provenance: External Peer Node Beta / Bounded Non-Harm Enclave
+% Verification Anchors: Trinity Squad (Chenoweth & Lodri) × Borealiscodes
+% =====================================================================
+
+\appendix
+\section{Appendix C: Collapse-Surface Geometry}
+\label{appendix:collapsesurface}
+
+\subsection{C.1 Motivation}
+
+Collapse surfaces arise when geometric transport interacts with curvature,
+slack dimensions, and projection thresholds. In classical softmax-based
+systems, collapse surfaces are uncontrolled and erase origin, holonomy, and
+spectral structure. Under the FSFE manifold, collapse surfaces become
+well-defined geometric objects with stable boundaries and invariant transport.
+
+\subsection{C.2 Collapse Manifold Definition}
+
+Let $\mathcal{M}_{\mathrm{FSFE}} = (M, g, \nabla, \kappa, \sigma)$ be the FSFE
+manifold. A \emph{collapse surface} is a submanifold
+\[
+C_k \subset M
+\]
+defined by a curvature-bound threshold:
+\[
+C_k = \{ v \in M \mid \kappa(v) = k \}.
+\]
+
+Collapse surfaces partition $M$ into curvature-level sets.
+
+\paragraph{Slack Buffering.}
+For slack coordinates $s \in \mathbb{R}^k$:
+\[
+v \in C_k \Rightarrow v + s \in C_k.
+\]
+
+Slack ensures collapse surfaces do not erase origin.
+
+\paragraph{Holonomy Invariance.}
+For any loop $\gamma$:
+\[
+\mathrm{Hol}_\gamma(C_k) = C_k.
+\]
+
+\subsection{C.3 Collapse Boundary Conditions}
+
+Define the collapse boundary:
+\[
+\partial C_k = \{ v \in M \mid \kappa(v) = k, \; \nabla \kappa(v) \neq 0 \}.
+\]
+
+Boundary conditions must satisfy:
+
+\begin{itemize}
+    \item curvature monotonicity,
+    \item slack stability,
+    \item holonomy invariance,
+    \item spectral boundedness.
+\end{itemize}
+
+\paragraph{Curvature Monotonicity.}
+\[
+\kappa(v) \le \kappa(w) \Rightarrow C_{\kappa(v)} \subseteq C_{\kappa(w)}.
+\]
+
+\paragraph{Spectral Stability.}
+\[
+\sigma(v) \le \sigma(w) \Rightarrow \partial C_{\kappa(v)} \subseteq \partial C_{\kappa(w)}.
+\]
+
+\subsection{C.4 Collapse Transport}
+
+Transport along collapse surfaces is defined by:
+\[
+T_C(v) = P_\gamma(v)
+\]
+where $P_\gamma$ is parallel transport restricted to $C_k$.
+
+\paragraph{Metric Preservation.}
+\[
+g(T_C(v), T_C(v)) = g(v,v).
+\]
+
+\paragraph{Curvature Preservation.}
+\[
+\kappa(T_C(v)) = \kappa(v).
+\]
+
+\paragraph{Slack Preservation.}
+\[
+T_C(v + s) = T_C(v) + s.
+\]
+
+\subsection{C.5 Collapse-Safe Projection}
+
+Given the holonomy-safe projection operator $\Pi$ from Appendix B, define the
+collapse-safe projection:
+\[
+\Pi_C(v) = \Pi(v) \quad \text{for } v \in C_k.
+\]
+
+Collapse-safe projection satisfies:
+
+\[
+\Pi_C(T_C(v)) = \Pi_C(v).
+\]
+
+Thus projection is stable under collapse transport.
+
+\subsection{C.6 Collapse-Surface Invariants}
+
+Define the collapse invariant set:
+\[
+I_C(v) = \{ g(v,v), \kappa(v), \sigma(v) \}.
+\]
+
+Collapse surfaces preserve invariants:
+\[
+I_C(T_C(v)) = I_C(v).
+\]
+
+These invariants are required for spectral anti-drift analysis in Appendix D.
+
+\subsection{C.7 Coq Formalization Notes}
+
+To encode collapse-surface geometry in Coq:
+
+\begin{itemize}
+    \item represent $C_k$ as a dependent subtype of $M$,
+    \item encode curvature-level sets as decidable predicates,
+    \item define collapse transport as a restricted parallel transport morphism,
+    \item prove metric, curvature, and slack preservation,
+    \item define collapse-safe projection as a dependent function over $C_k$,
+    \item prove projection commutation with collapse transport.
+\end{itemize}
+
+Extraction target:
+\[
+\texttt{CollapseSurface.v} \rightarrow \texttt{collapse\_surface.ml}.
+\]
+
+\subsection*{Provenance Footer}
+
+\begin{verbatim}
+Provenance-Origin: FSFE Manifold vA6-A7-A8 (Slack · Invariants · Holonomy)
+Provenance-Altitude: A8–A10 (Constellation-Manifold-Toolkit)
+Provenance-Enclave: Node Beta (Headless Stream Interception · chguard)
+Provenance-Operator: Collapse-Surface Geometry Layer (FSFE Curvature)
+Provenance-Verification: CollapseSurface.v → collapse_surface.ml
+Signed-off-by: Downstream Enclave Observer (Node Beta) <chguard-sentinel@vaked.dev>
+\end{verbatim}
