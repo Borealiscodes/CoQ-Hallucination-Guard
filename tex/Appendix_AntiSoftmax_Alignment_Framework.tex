@@ -5,177 +5,167 @@
 % Tracked Provenance: External Peer Node Beta / Bounded Non-Harm Enclave
 % Verification Anchors: Trinity Squad (Chenoweth & Lodri) \times Borealiscodes
 % =====================================================================
-\documentclass[11pt,oneside,letterpaper]{article}
 
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath,amssymb,amsfonts,amsthm}
-\usepackage{geometry}
-\usepackage{microtype}
-\usepackage{booktabs}
-\usepackage{tikz-cd}
-\usepackage{bm}
-\usepackage{mathtools}
-\usepackage{hyperref}
+\appendix
+\section{Anti-Softmax Alignment Framework (FSFE Edition)}
+\label{appendix:antisoftmax}
 
-\geometry{margin=1in}
+\subsection{A.1 Motivation: Softmax as a Collapse Operator}
 
-% --- Core Structural Mathematical Environments ---
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{invariant}[theorem]{Invariant}
-\newtheorem{danger}[theorem]{Structural Danger}
+The classical softmax operator
+\[
+\mathrm{softmax}(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}
+\]
+acts as a collapse map
+\[
+\Pi_{\mathrm{soft}} : M \rightarrow \Delta^{n-1}
+\]
+from a geometric manifold $M$ into the probability simplex $\Delta^{n-1}$.
+This mapping destroys geometric structure, including:
 
-\newcommand{\M}{\mathcal{M}^{80}}
-\newcommand{\F}{\mathcal{F}_k}
-\newcommand{\A}{\mathcal{A}_k}
-\newcommand{\trit}{\mathcal{T}}
-\newcommand{\W}{\mathbf{W}}
-\newcommand{\X}{\mathbf{X}}
-\newcommand{\Y}{\mathbf{Y}}
+\begin{itemize}
+    \item origin information,
+    \item curvature,
+    \item holonomy,
+    \item slack dimensions,
+    \item spectral energy distribution.
+\end{itemize}
 
-\begin{document}
+Softmax is therefore incompatible with systems requiring reversible operators,
+stable provenance, ternary projection, NDH (Non-Dual Holonomy), or FSFE manifold invariants.
 
-\title{\textbf{The Geometry of Presence and the Failure of Softmax:\\
-Formalizing the VAKED Attestation Layer via Decidable Ternary Resonance and Bounded \texttt{chguard} Enclaves}}
+\subsection{A.2 FSFE Manifold Definition}
 
-\author{\textbf{Borealis S. Hedling} \\ \small External Peer Node Beta \\ \small \texttt{chguard-sentinel@vaked.dev} 
-\and \textbf{The Trinity Squad} \\ \small Core Ternary Invariants \\ \small Christopher Chenoweth \& Peter Lodri}
+We define the FSFE manifold as the tuple
+\[
+\mathcal{M}_{\mathrm{FSFE}} = (M, g, \nabla, \kappa, \sigma)
+\]
+where:
 
-\date{October 29, 2026}
+\begin{itemize}
+    \item $g$ is a metric tensor satisfying the triangle inequality,
+    \item $\nabla$ is a connection compatible with $g$,
+    \item $\kappa$ is a curvature function bounded by monotonicity constraints,
+    \item $\sigma$ is a spectral energy bound ensuring collapse-surface stability.
+\end{itemize}
 
-\maketitle
+\paragraph{Slack Dimensions (A6).}
+Introduce slack coordinates $s \in \mathbb{R}^k$ such that:
+\[
+g(v + s, v + s) \ge g(v, v)
+\]
+ensuring collapse does not erase origin.
 
-\begin{abstract}
-This technical manuscript formalizes the structural alignment between the VAKED utility token attestation layer and the deterministic execution profile of the Coq-Hallucination-Guard (\texttt{chguard}) enclave. We map the token's core functionality—verifying non-repudiable presence and participation ($ \text{PRINTABLE} \equiv \text{HELD} \land \text{READ} $)—onto a smooth 80-dimensional soft Riemannian manifold ($\M$) regulated by an immutable, discrete balanced ternary algebra ($\trit \in \{-1, 0, +1\}$). Crucially, we demonstrate the deep mathematical dangers of using conventional neural \textit{softmax algebra} for safety-critical alignment tracking. By exposing how softmax introduces gradient leakage, boundary blur, and hallucination spaces, we justify the mathematical necessity of the Ternary Resonance framework developed by the Trinity Squad as a branchless, containerized firewall against semantic mimicry.
-\end{abstract}
+\paragraph{Invariant Preservation (A7).}
+For any operator $A$:
+\[
+I(A(v)) = I(v)
+\]
+where $I$ is the FSFE invariant set.
 
-\hr
+\paragraph{Holonomy Compatibility (A8).}
+Parallel transport along loop $\gamma$:
+\[
+\mathrm{Hol}_\gamma(v) = P_\gamma(v)
+\]
+must commute with projection operators.
 
-% =====================================================================
-\section{Introduction and Architectural Alignment}
-% =====================================================================
-As articulated in the \textit{VAKED Whitepaper}, the verification of human presence, contribution, and interaction within the Sovereign Library requires an immutable, un-manipulable attestation layer. Traditional AI architectures attempt to track and verify alignment through continuous probabilistic matrices governed by the softmax function. However, statistical probability distributions are fundamentally incapable of modeling structural invariants; they represent form rather than meaning, inducing severe vulnerability to \textit{Syntactic and Semantic Mimicry}.
+\subsection{A.3 Softmax Violates Holonomy}
 
-Operating as an independent external observer (**Node Beta**), this framework bridges the fair-launch utility topology of VAKED with a compiled, computer-checked Coq/Ssreflect verification sandbox. This manuscript outlines the complete geometric constraints of this system and provides a strict proof of why continuous softmax algebra fails to protect a complex system from topological collapse.
+Softmax does not commute with parallel transport:
+\[
+\mathrm{softmax}(\mathrm{Hol}(v)) \neq \mathrm{Hol}(\mathrm{softmax}(v)).
+\]
 
-% =====================================================================
-\section{The VAKED Attestation Layer and Ternary Projection}
-% =====================================================================
-The VAKED attestation protocol rejects arbitrary proxy metrics. Instead, it relies on a discrete, non-floating-point evaluation field mapped onto a three-state coordinate space, formalized by the Trinity Squad's principles of \text{Ternary Resonance into complex system consolidation}.
+\paragraph{Proof Sketch.}
+Holonomy preserves geometric structure; softmax collapses it.
+Collapse cannot preserve parallel transport invariants.
+Thus softmax is incompatible with NDH and any holonomy-based operator.
 
-\begin{definition}[Ternary Attestation Mapping]
-Let the state space of any incoming contribution, weight vector, or reading signature be governed by the decidable type $\trit$:
-\begin{equation}
-\trit \coloneqq \{-1, 0, +1\} \subset \mathbb{Z}
-\end{equation}
-The values map strictly onto structural compliance dimensions:
-\begin{align*}
-    \trit = -1 & \quad \text{Samsaric Trap / Environmental Contamination / Boundary Breach} \\
-    \trit =  0 & \quad \text{Primordial Space / Honest Witness / Unverified Idle State} \\
-    \trit = +1 & \quad \text{Verified Binding / Bodhicitta / Safe Active Attestation}
-\end{align
-\end{definition}
+\subsection{A.4 Anti-Softmax Operator}
 
-This trinary abstraction is implemented programmatically in the Coq kernel file \texttt{BaseTernary.v}, establishing an automated small-scale reflection pattern via the decidable equality lemma \texttt{trit\_eqP}.
+Define the Anti-Softmax operator:
+\[
+A_{\mathrm{anti}} : M \rightarrow M
+\]
+with the following properties:
 
-\begin{invariant}[The Constitutional Gate Law]
-An exploration token or document volume achieves the state of structural realizability ($\text{PRINTABLE}$) if and only if it is simultaneously held within an on-chain repository framework ($\text{HELD}$) and verified by an active observer node ($\text{READ}$):
-\begin{equation}
-\text{constitutional\_gate}(\text{held}, \text{read}) = 
+\paragraph{Origin Preservation.}
+\[
+A_{\mathrm{anti}}(v) = v + \varepsilon_s
+\]
+where $\varepsilon_s$ lies entirely in slack dimensions.
+
+\paragraph{Curvature Stability.}
+\[
+\kappa(A_{\mathrm{anti}}(v)) \le \kappa(v).
+\]
+
+\paragraph{Holonomy Commutation.}
+\[
+A_{\mathrm{anti}}(\mathrm{Hol}(v)) = \mathrm{Hol}(A_{\mathrm{anti}}(v)).
+\]
+
+\paragraph{Spectral Anti-Collapse.}
+\[
+\mathrm{SpecInt}(A_{\mathrm{anti}}(v)) \le \mathrm{SpecInt}(v).
+\]
+
+\subsection{A.5 Ternary Projection Under FSFE Geometry}
+
+Define the ternary projection:
+\[
+\Pi_{\{-1,0,+1\}} : M \rightarrow \{-1,0,+1\}
+\]
+with thresholds determined by curvature, slack, spectral energy, and holonomy loops.
+
+\[
+\Pi(v) =
 \begin{cases}
-    +1 & \text{if } \text{held} = \text{true} \land \text{read} = \text{true} \\
-     0 & \text{if } \text{held} = \text{true} \land \text{read} = \text{false} \\
-    -1 & \text{otherwise}
++1 & \text{if } g(v,v) > \tau_+, \\
+0  & \text{if } \tau_- \le g(v,v) \le \tau_+, \\
+-1 & \text{if } g(v,v) < \tau_-.
 \end{cases}
-\end{equation
-\end{invariant}
+\]
 
-% =====================================================================
-\section{The Structural Danger of Softmax Algebra}
-% =====================================================================
-Large Language Models (LLMs) and probabilistic multi-agent systems rely on the **softmax operator** $\bm{\sigma}: \mathbb{R}^N \to \mathbb{R}^N$ to project raw logit matrices $\mathbf{z}$ into probability vectors:
-\begin{equation}
-\bm{\sigma}(\mathbf{z})_i = \frac{e^{z_i}}{\sum_{j=1}^N e^{z_j}}
-\end{equation}
+\subsection{A.6 NDH Stabilization Under FSFE}
 
-While highly effective for local pattern matching and word-token generation, the application of softmax algebra to alignment enforcement or structural state verification introduces **profound mathematical dangers**.
+NDH is defined as:
+\[
+\mathrm{NDH}(v) = \mathrm{Hol}_\gamma(v) - v.
+\]
 
-\begin{danger}[The Infinite Boundary Hallucination Space]
-The codomain of the softmax function is strictly bounded by the open interval $(0, 1)$:
-\begin{equation}
-\bm{\sigma}(\mathbf{z})_i \in (0, 1), \quad \forall z_i \in \mathbb{R}
-\end{equation
-Consequently, softmax **can never express absolute true ($1$) or absolute false ($0$)**. It forces safety constraints to live inside a continuous, asymptotical approximation space. This creates an infinite hallucination zone where a malicious agent or drifting model can insert an unverified transformation with an error margin of $\epsilon > 0$, bypassing strict type checking.
-\end{danger}
+Softmax destroys NDH because it collapses holonomy.
+FSFE stabilizes NDH because holonomy is preserved, slack prevents collapse,
+spectral bounds prevent drift, and curvature monotonicity prevents distortion.
 
-\begin{danger}[Gradient Leakage and Blur Singularity]
-Let $\Phi_7$ be the operator-valued curvature of an 80-dimensional smooth manifold $\M$. If state changes are tracked via soft probability updates, the system boundary transitions rely on partial derivatives. The Jacobian matrix of the softmax function is given by:
-\begin{equation}
-\frac{\partial \bm{\sigma}_i}{\partial z_j} = \bm{\sigma}_i (\delta_{ij} - \bm{\sigma}_j)
-\end{equation}
-As an LLM loops through repetitive, reasoning-shaped text sequences (\textit{Semantic Mimicry}), the soft probabilities continuously multiply across operational fields. As $z_j \to \infty$ or $z_j \to -\infty$, the gradients flatten out ($\frac{\partial \bm{\sigma}_i}{\partial z_j} \to 0$). 
+Thus NDH becomes a valid geometric operator.
 
-This flattens the metric tensor of the manifold, blinding the system to drift anomalies. The structural boundary blurs into a statistical smudge, allowing anomalous code structures to pass into production undetected.
-\end{danger}
+\subsection{A.7 Coq Formalization Notes}
 
-\begin{figure}[h!]
-\centering
-\begin{tikzpicture}
-    % Softmax blur zone
-    \fill[left color=red!20,right color=blue!20] (-3,1) rectangle (3,2);
-    \draw[thick, dashed] (-3,1.5) -- (3,1.5) node[midway, above] {Softmax Boundary Blur Area: $\bm{\sigma}(z) \approx 0.999$};
-    
-    % Ternary strict gates
-    \draw[ultra thick, ->] (-4,-1) -- (-2,-1) node[midway, below] {$\trit = -1$};
-    \draw[ultra thick, ->] (-1,-1) -- (1,-1) node[midway, below] {$\trit = 0$};
-    \draw[ultra thick, ->] (2,-1) -- (4,-1) node[midway, below] {$\trit = +1$};
-    
-    \node at (0,-1.7) {\textbf{Rigid Ternary Resonance Gates (Decidable, Branchless)}};
-\end{tikzpicture}
-\caption{Visual representation of continuous Softmax boundary leakage versus rigid Ternary Resonance state separation.}
-\label{fig:comparison}
-\end{figure}
+To encode this in Coq:
 
-% =====================================================================
-\section{Computational Overhaul: Branchless Lane Fusion}
-% =====================================================================
-To eliminate the vulnerabilities of softmax, Node Beta implements the Trinity Squad's branchless matrix reductions within **`src/chguard/interceptor.py`**. Instead of invoking conditional jumps based on soft likelihood values, the runtime flattens operations into pure, fast integer equations.
+\begin{itemize}
+    \item represent $M$ as a dependent type,
+    \item encode slack dimensions as a sigma-type,
+    \item define holonomy as a transport function,
+    \item define Anti-Softmax as a structure-preserving morphism,
+    \item prove commutation lemmas for NDH,
+    \item prove anti-collapse invariants using spectral bounds.
+\end{itemize}
 
-Consider the baseline lane step function processing an incoming 64-bit entropy string. The extraction of the active trit bypasses branching statements completely, avoiding CPU pipeline stalls and branch mispredictions:
-\begin{equation}
-\trit_{\text{lane}} = (\text{shifted} \pmod 3 \equiv 1) - (\text{shifted} \pmod 3 \equiv 2)
-\end{equation}
+Extraction target:
+\[
+\texttt{BaseTernary.v} \rightarrow \texttt{extracted\_ternary.ml}.
+\]
 
-When unrolled across 16 parallel lanes inside the `improved_kernel`, the results combine via zero-overhead `wrapping_add` instructions:
-Use code with caution.
-\begin{equation}
-\mathbf{Y} = \gamma \cdot \left( \W_{\text{pos}}\X - \W_{\text{neg}}\X \right)
-\end{equation}
-This forces any out-of-bounds component or malicious trace mutation to mathematically trigger an immediate state collapse down to zero or a negative boundary anomaly, immediately aborting the execution pipeline at the CPU hardware level.
-% =====================================================================
-\section{Headless Stream Parsing and Sandbox Isolation}
-% =====================================================================
-The active runtime execution layer operates as a secure proxy firewall, reading the unbuffered stdout text streams emitted by the language server.
-\subsection{JSON-RPC Framing Check}
-The telemetry engine inside \texttt{geometry.py} strips Content-Length transport envelopes directly from the active standard I/O pipes:
-\begin{equation}
-\mathcal{S}_{\text{raw}} = \text{parse_next_rpc_message}(\text{stdin_buffer})
-\end{equation}
-Every goal state mutation generates a unique, structural cryptographic fingerprint hash:
-\begin{equation}
-\mathcal{H}_{\text{state}} = \mathcal{H}\left( \text{Hypotheses} \parallel \text{Conclusion} \right)
-\end{equation}
-If the incoming tactic sequence triggers a text change but the state fingerprint remains identical ($\mathcal{H}t = \mathcal{H}{t-1}$), the validator immediately identifies a Syntactic Mimicry attack loop.
-The interceptor instantly executes a hard shutdown sequence (sys.exit(1)), purges the active buffer registers, and isolates the docker workspace sandbox.
-% =====================================================================
-\section{Conclusion and Verification Matrix}
-% =====================================================================
-By exchanging leaky softmax approximations for the rigid, decidable geometry of Ternary Resonance, Node Beta builds an unyielding firewall around the VAKED attestation layer.
-The computer-checked proofs within the \texttt{coq/Proofs/} subdirectory (\texttt{Holonomy.v}, \texttt{CurvatureEvolution.v}, \texttt{RuntimeFusion.v}, \texttt{SpectralIntegration.v}) confirm that these state boundaries are structurally permanent. The system acts as a self-defending geometric enclave, maintaining the purity, safety, and non-harm parameters of the Sovereign Commons.
-\begin{center}
-\small \textbf{DEVELOPER CERTIFICATE OF ORIGIN (DCO) SIGN-OFF} \ \vspace{0.1cm}
-\texttt{Signed-off-by: Downstream Enclave Observer (Node Beta) chguard-sentinel@vaked.dev}
-\end{center}
-\end{document}
+\subsection*{Provenance Footer}
 
+\begin{verbatim}
+Provenance-Origin: FSFE Manifold vA6-A7-A8 (Slack · Invariants · Holonomy)
+Provenance-Altitude: A8–A10 (Constellation-Manifold-Toolkit)
+Provenance-Enclave: Node Beta (Headless Stream Interception · chguard)
+Provenance-Operator: Anti-Softmax Alignment Layer (Stable Origin Geometry)
+Provenance-Verification: BaseTernary.v → extracted_ternary.ml (Invariant-Preserved)
+Signed-off-by: Downstream Enclave Observer (Node Beta) <chguard-sentinel@vaked.dev>
+\end{verbatim}
