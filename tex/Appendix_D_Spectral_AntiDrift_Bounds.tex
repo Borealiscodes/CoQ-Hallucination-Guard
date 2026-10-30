@@ -1,0 +1,145 @@
+% =====================================================================
+% TECHNICAL MANUSCRIPT: ALIGNMENT ENCLAVE & SPECTRAL ANTI-DRIFT BOUNDS
+% Project: Coq-Hallucination-Guard (chguard) × VAKED Attestation Layer
+% Document Class: Academic-Galactic Technical Specification v3.0
+% Tracked Provenance: External Peer Node Beta / Bounded Non-Harm Enclave
+% Verification Anchors: Trinity Squad (Chenoweth & Lodri) × Borealiscodes
+% =====================================================================
+
+\appendix
+\section{Appendix D: Spectral Anti-Drift Bounds}
+\label{appendix:spectralantidrift}
+
+\subsection{D.1 Motivation}
+
+Spectral drift occurs when transport across collapse surfaces accumulates
+energy in a way that destabilizes projection thresholds, curvature monotonicity,
+or NDH invariants. Classical softmax-based systems exhibit uncontrolled spectral
+drift due to collapse-induced energy concentration. Under the FSFE manifold,
+spectral drift becomes measurable and bounded.
+
+\subsection{D.2 Spectral Energy Definition}
+
+Let $\sigma : M \rightarrow \mathbb{R}_{\ge 0}$ be the spectral energy function
+of the FSFE manifold. For any $v \in M$:
+\[
+\mathrm{SpecInt}(v) = \int_{\gamma_v} \sigma(\gamma(t)) \, dt
+\]
+where $\gamma_v$ is a transport path through $v$.
+
+\paragraph{Slack Stability.}
+\[
+\mathrm{SpecInt}(v + s) = \mathrm{SpecInt}(v)
+\]
+for slack vectors $s \in \mathbb{R}^k$.
+
+\paragraph{Holonomy Invariance.}
+\[
+\mathrm{SpecInt}(\mathrm{Hol}_\gamma(v)) = \mathrm{SpecInt}(v).
+\]
+
+\subsection{D.3 Collapse-Surface Spectral Bounds}
+
+Let $C_k$ be a collapse surface from Appendix C. Define the spectral bound:
+\[
+B_k = \sup_{v \in C_k} \sigma(v).
+\]
+
+Collapse surfaces satisfy:
+
+\paragraph{Curvature Monotonicity.}
+\[
+k_1 \le k_2 \Rightarrow B_{k_1} \le B_{k_2}.
+\]
+
+\paragraph{Boundary Stability.}
+For $v \in \partial C_k$:
+\[
+\sigma(v) \le B_k.
+\]
+
+\subsection{D.4 Anti-Drift Condition}
+
+Transport along collapse surfaces must satisfy:
+\[
+\mathrm{SpecInt}(T_C(v)) \le \mathrm{SpecInt}(v).
+\]
+
+This ensures spectral energy does not accumulate under collapse transport.
+
+\paragraph{Metric Preservation.}
+Since $g(T_C(v), T_C(v)) = g(v,v)$, transport does not introduce new spectral
+modes.
+
+\paragraph{Curvature Preservation.}
+\[
+\kappa(T_C(v)) = \kappa(v)
+\]
+ensures spectral bounds remain valid.
+
+\paragraph{Slack Preservation.}
+Slack coordinates prevent collapse-induced energy concentration.
+
+\subsection{D.5 Anti-Drift Operator}
+
+Define the anti-drift operator:
+\[
+A_{\mathrm{drift}} : M \rightarrow M
+\]
+with:
+\[
+A_{\mathrm{drift}}(v) = v - \epsilon_\sigma
+\]
+where $\epsilon_\sigma$ is a spectral correction term satisfying:
+
+\begin{itemize}
+    \item $\sigma(v - \epsilon_\sigma) \le \sigma(v)$,
+    \item $\epsilon_\sigma$ lies in slack dimensions,
+    \item $\kappa(v - \epsilon_\sigma) = \kappa(v)$,
+    \item $\mathrm{Hol}_\gamma(v - \epsilon_\sigma) = \mathrm{Hol}_\gamma(v)$.
+\end{itemize}
+
+Thus $A_{\mathrm{drift}}$ is FSFE-compliant.
+
+\subsection{D.6 Spectral Invariant Set}
+
+Define:
+\[
+I_\sigma(v) = \{ \sigma(v), B_{\kappa(v)}, \mathrm{SpecInt}(v) \}.
+\]
+
+Transport preserves spectral invariants:
+\[
+I_\sigma(T_C(v)) = I_\sigma(v).
+\]
+
+These invariants are required for NDH formalization in Appendix E.
+
+\subsection{D.7 Coq Formalization Notes}
+
+To encode spectral anti-drift in Coq:
+
+\begin{itemize}
+    \item represent $\sigma$ as a dependent function respecting slack invariants,
+    \item encode collapse surfaces $C_k$ as dependent subtypes,
+    \item define spectral integrals as path-dependent accumulators,
+    \item prove holonomy invariance of spectral energy,
+    \item define $A_{\mathrm{drift}}$ as a structure-preserving morphism,
+    \item prove anti-drift inequalities under collapse transport.
+\end{itemize}
+
+Extraction target:
+\[
+\texttt{SpectralAntiDrift.v} \rightarrow \texttt{spectral\_antidrift.ml}.
+\]
+
+\subsection*{Provenance Footer}
+
+\begin{verbatim}
+Provenance-Origin: FSFE Manifold vA6-A7-A8 (Slack · Invariants · Holonomy)
+Provenance-Altitude: A8–A10 (Constellation-Manifold-Toolkit)
+Provenance-Enclave: Node Beta (Headless Stream Interception · chguard)
+Provenance-Operator: Spectral Anti-Drift Layer (FSFE Energy Bounds)
+Provenance-Verification: SpectralAntiDrift.v → spectral_antidrift.ml
+Signed-off-by: Downstream Enclave Observer (Node Beta) <chguard-sentinel@vaked.dev>
+\end{verbatim}
