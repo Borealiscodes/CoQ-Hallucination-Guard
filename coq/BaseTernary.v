@@ -9,9 +9,9 @@ Unset Strict Implicit.
 Unset Printing Implicit Defensive.
 
 Inductive trit : Type :=
-  | TMinus : trit  (* -1 : Samsaric Trap / Unverified / Broken Boundary *)
-  | TZero  : trit  (*  0 : Primordial Space / Invariant Anchor *)
-  | TPlus  : trit. (* +1 : Verified Binding / Bodhicitta / Safe Space *)
+  | TMinus : trit  (* -1 : Negative state / structural deficit *)
+  | TZero  : trit  (*  0 : Neutral state / invariant anchor *)
+  | TPlus  : trit. (* +1 : Positive state / verified binding *)
 
 (* Decidable equality function for ternary types *)
 Definition trit_eq (t1 t2 : trit) : bool :=
@@ -22,14 +22,12 @@ Definition trit_eq (t1 t2 : trit) : bool :=
   | _, _           => false
   end.
 
-(* Formally proving that trit_eq reflects actual logical equality *)
 Lemma trit_eqP : Equality.axiom trit_eq.
 Proof. move=> [||] [||]; constructor; by try eq_refl. Qed.
 
-(* Embedding trit into the MathComp eqType structural ecosystem *)
 Canonical trit_eqType := EqType trit trit_eqP.
 
-(* Single-trit negation operator (Inversion across the 0 Anchor) *)
+(* Single-trit negation operator *)
 Definition trit_opp (t : trit) : trit :=
   match t with
   | TMinus => TPlus
@@ -37,7 +35,7 @@ Definition trit_opp (t : trit) : trit :=
   | TPlus  => TMinus
   end.
 
-(* Balanced Ternary Addition: Returns (Carry, Sum) pair *)
+(* Balanced ternary addition: returns (carry, sum) *)
 Definition trit_add (t1 t2 : trit) : trit * trit :=
   match t1, t2 with
   | TZero, x => (TZero, x)
@@ -48,7 +46,7 @@ Definition trit_add (t1 t2 : trit) : trit * trit :=
   | TMinus, TPlus => (TZero, TZero)
   end.
 
-(* Balanced Ternary Multiplication (Branchless state-collapse operator) *)
+(* Balanced ternary multiplication *)
 Definition trit_mul (t1 t2 : trit) : trit :=
   match t1, t2 with
   | TZero, _ => TZero
@@ -58,11 +56,10 @@ Definition trit_mul (t1 t2 : trit) : trit :=
   | TMinus, TMinus => TPlus
   end.
 
-(* Constitutional Gating Invariant: PRINTABLE = HELD ∧ READ *)
-(* Returns TPlus iff both components are completely verified *)
+(* Structural gating invariant *)
 Definition constitutional_gate (held read : bool) : trit :=
   match held, read with
   | true, true => TPlus
-  | true, false => TZero   (* Gated / Awaiting read verification *)
-  | _, _ => TMinus        (* Out of bounds violation *)
+  | true, false => TZero
+  | _, _ => TMinus
   end.
