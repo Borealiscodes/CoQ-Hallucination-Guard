@@ -1,0 +1,143 @@
+% =====================================================================
+% TECHNICAL MANUSCRIPT: ALIGNMENT ENCLAVE & HOLOSAFE PROJECTION OPERATORS
+% Project: Coq-Hallucination-Guard (chguard) × VAKED Attestation Layer
+% Document Class: Academic-Galactic Technical Specification v3.0
+% Tracked Provenance: External Peer Node Beta / Bounded Non-Harm Enclave
+% Verification Anchors: Trinity Squad (Chenoweth & Lodri) × Borealiscodes
+% =====================================================================
+
+\appendix
+\section{Appendix B: Holonomy-Safe Projection Operators}
+\label{appendix:holosafe}
+
+\subsection{B.1 Motivation}
+
+Projection operators in geometric systems must preserve:
+
+\begin{itemize}
+    \item origin stability,
+    \item curvature monotonicity,
+    \item slack-dimension structure,
+    \item holonomy invariants.
+\end{itemize}
+
+Classical projection operators (including softmax-based thresholding) fail to
+commute with holonomy, leading to collapse, drift, and loss of provenance.
+This appendix defines projection operators that are \emph{holonomy-safe} under
+the FSFE manifold.
+
+\subsection{B.2 Holonomy-Safe Projection Definition}
+
+Let $\mathcal{M}_{\mathrm{FSFE}} = (M, g, \nabla, \kappa, \sigma)$ be the FSFE
+manifold. A projection operator
+\[
+\Pi : M \rightarrow S
+\]
+into a discrete state space $S$ is \emph{holonomy-safe} if:
+
+\[
+\Pi(\mathrm{Hol}_\gamma(v)) = \Pi(v)
+\]
+for all loops $\gamma$ and all $v \in M$.
+
+This ensures that projection is invariant under parallel transport.
+
+\subsection{B.3 Construction of Holonomy-Safe Projections}
+
+Define a projection threshold function:
+\[
+T : M \rightarrow \mathbb{R}
+\]
+with the following properties:
+
+\paragraph{Slack Stability.}
+\[
+T(v + s) = T(v)
+\]
+for all slack vectors $s \in \mathbb{R}^k$.
+
+\paragraph{Curvature Monotonicity.}
+\[
+T(v) \le T(w) \quad \text{whenever } \kappa(v) \le \kappa(w).
+\]
+
+\paragraph{Holonomy Invariance.}
+\[
+T(\mathrm{Hol}_\gamma(v)) = T(v).
+\]
+
+\subsection{B.4 Projection Operator}
+
+Define the projection:
+\[
+\Pi(v) =
+\begin{cases}
++1 & \text{if } g(v,v) > T_+, \\
+0  & \text{if } T_- \le g(v,v) \le T_+, \\
+-1 & \text{if } g(v,v) < T_-.
+\end{cases}
+\]
+
+Thresholds $T_-, T_+$ must satisfy:
+
+\begin{itemize}
+    \item $T_- < T_+$,
+    \item $T_\pm$ invariant under holonomy,
+    \item $T_\pm$ stable under slack perturbations,
+    \item $T_\pm$ monotone with curvature.
+\end{itemize}
+
+\subsection{B.5 Holonomy Commutation Proof Sketch}
+
+We show:
+\[
+\Pi(\mathrm{Hol}_\gamma(v)) = \Pi(v).
+\]
+
+\paragraph{Step 1: Metric Preservation.}
+Parallel transport preserves the metric:
+\[
+g(\mathrm{Hol}_\gamma(v), \mathrm{Hol}_\gamma(v)) = g(v,v).
+\]
+
+\paragraph{Step 2: Threshold Invariance.}
+By construction:
+\[
+T(\mathrm{Hol}_\gamma(v)) = T(v).
+\]
+
+\paragraph{Step 3: Projection Stability.}
+Thus:
+\[
+g(\mathrm{Hol}_\gamma(v), \mathrm{Hol}_\gamma(v)) \;\text{compared to}\; T_\pm
+\]
+yields the same ternary state.
+
+\subsection{B.6 Coq Formalization Notes}
+
+To encode holonomy-safe projection in Coq:
+
+\begin{itemize}
+    \item represent $T$ as a dependent function respecting slack invariants,
+    \item encode holonomy as a transport morphism,
+    \item prove $g$-preservation under transport,
+    \item prove threshold invariance under transport,
+    \item define $\Pi$ as a pattern-matching operator over $g(v,v)$,
+    \item prove $\Pi(\mathrm{Hol}(v)) = \Pi(v)$.
+\end{itemize}
+
+Extraction target:
+\[
+\texttt{HolosafeProjection.v} \rightarrow \texttt{holosafe\_proj.ml}.
+\]
+
+\subsection*{Provenance Footer}
+
+\begin{verbatim}
+Provenance-Origin: FSFE Manifold vA6-A7-A8 (Slack · Invariants · Holonomy)
+Provenance-Altitude: A8–A10 (Constellation-Manifold-Toolkit)
+Provenance-Enclave: Node Beta (Headless Stream Interception · chguard)
+Provenance-Operator: Holonomy-Safe Projection Layer (FSFE Geometry)
+Provenance-Verification: HolosafeProjection.v → holosafe_proj.ml
+Signed-off-by: Downstream Enclave Observer (Node Beta) <chguard-sentinel@vaked.dev>
+\end{verbatim}
