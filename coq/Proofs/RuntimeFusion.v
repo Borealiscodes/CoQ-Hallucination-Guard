@@ -19,13 +19,12 @@ Theorem branchless_lane_fusion_invariant :
     all (fun t => trit_eq t TPlus) lanes ->
     foldl trit_mul TPlus lanes = TPlus.
 Proof.
-  move=> lanes H_nz /allP H_plus.
-  elim: lanes H_plus => [|t tl IH] H_plus /=.
+  move=> lanes H_nz.
+  elim: lanes => [|t tl IH] /=.
     by [].
-  have /eqP ->: trit_eq t TPlus by apply: H_plus; left.
+  move/andP => [/eqP -> H_all].
   rewrite /=.
-  apply: IH => x H_in.
-  by apply: H_plus; right.
+  by apply: IH.
 Qed.
 
 End RuntimeFusion.
