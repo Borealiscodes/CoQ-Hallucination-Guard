@@ -17,4 +17,4 @@ Extract Inlined Definition trit_eq => "(fun t1 t2 -> t1 = t2)".
 Extract Inlined Definition trit_opp => "(fun t -> match t with TMinus -> TPlus | TZero -> TZero | TPlus -> TMinus)".
 
 (* Extract the structural modules directly into the local building layout path *)
-Extraction "src/chguard/extracted_ternary.ml" trit BaseTernary.trit_add BaseTernary.trit_mul BaseTernary.constitutional_gate.
+Extraction "src/chguard/extracted_ternary.ml" trit trit_add trit_mul constitutional_gate.
