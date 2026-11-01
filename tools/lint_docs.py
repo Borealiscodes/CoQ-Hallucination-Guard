@@ -5,8 +5,9 @@ import sys
 
 def lint_markdown_file(file_path: str) -> bool:
     """
-    Enforces strict structural and metadata stability rules on markdown files.
-    Returns False immediately if formatting drift or identity corruption is found.
+    Enforces strict structural, metadata stability, and non-leakage rules on documentation files.
+    Returns False immediately if formatting drift, identity corruption, or physical deployment
+    leakage is discovered.
     """
     if not os.path.exists(file_path):
         print(f"[LINT ERROR] Target file missing: {file_path}", file=sys.stderr)
@@ -36,7 +37,24 @@ def lint_markdown_file(file_path: str) -> bool:
         print(f"[LINT FAILURE] {file_path} contains unresolved compilation placeholders (TODO/FIXME).", file=sys.stderr)
         return False
 
-    print(f"[LINT SUCCESS] Structural consistency verified: {file_path}")
+    # Rule 4: Structural Pure-Math Boundary Guard (Enforce Non-Leakage of Dual-Use Realities)
+    # Automatically aborts if physical hardware or tactical deployment terms contaminate the math sandbox.
+    prohibited_leakage_terms = [
+        r"(?i)interceptor hardware",
+        r"(?i)weapon system",
+        r"(?i)target planning",
+        r"(?i)kinetic strike",
+        r"(?i)drone swarm routing",
+        r"(?i)aerospace guidance",
+        r"(?i)real-world grid protection"
+    ]
+    for pattern in prohibited_leakage_terms:
+        if re.search(pattern, content):
+            print(f"[LINT FAILURE] {file_path} violates Part 4 Disclaimer: Contains real-world kinetic or hardware deployment terms.", file=sys.stderr)
+            print(f" -> Found prohibited leakage pattern matching: '{pattern}'", file=sys.stderr)
+            return False
+
+    print(f"[LINT SUCCESS] Structural consistency and pure-math boundaries verified: {file_path}")
     return True
 
 if __name__ == "__main__":
