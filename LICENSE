@@ -51,14 +51,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-================================================================================
-PART 3: DUAL-USE AND PROTECTIVE SAFEGUARDS
-================================================================================
-The mathematical primitives of this architecture manage connection fields, trajectory tracking, and error-filtering metrics inside multi-dimensional manifolds. Because these coordinates are inherently dual-use and structurally identical to target localization and autonomous routing vectors, the following execution conditions are permanently attached to this software:
+# ================================================================================ 
+# PART 3: ETHICAL EXECUTION CONDITIONS & SAFEGUARDS (HIPPOCRATIC PROVISIONS)
 
-1. Non-Offensive Optimization: The manifold metrics, vector fields, and tracking scripts contained herein may not be used for offensive kinetic targeting, launch-vector planning, hyper-adversarial strike configurations, or automated weapon swarm coordination.
-2. Passive Defense & Civilian Preservation: Deployment within live hardware systems is strictly limited to non-military, passive defensive protection, such as shielding public infrastructure, civilian transport networks, energy grids, and human-centered utility frameworks from structural defects, data corruption, or external hazards.
-3. Provenance Integrity: Any downstream software adaptation that adapts these geometric primitives for automated coordination tools must preserve this safeguard block, preventing the co-optation of the parent math by military-industrial or offensive state actors.
+The mathematical primitives and system architectures contained in this software are structurally capable of high-dimensional trajectory tracking and autonomous coordination. As a condition of using, modifying, or distributing this Software, the User agrees to the following strict execution conditions:
+
+1. Non-Weaponization and Demilitarization: This Software shall not be used, modified, or deployed by any User for offensive kinetic targeting, automated weapon swarm coordination, launch-vector planning, hyper-adversarial strike configurations, or any system explicitly designed to cause physical harm, destruction, or death.
+
+2. Critical Infrastructure Protection & Passive Defense: Live hardware deployment of this Software is strictly restricted to non-military, passive defensive protection, environmental preservation, and human-centered utilities. Permissible use cases include, but are not limited to, the protection of civilian transit networks, public energy grids, and public communication infrastructure against data corruption, structural defects, or hazards.
+
+3. Human Rights Adherence: The User shall not use this Software in any manner that violates applicable international human rights laws, including but not limited to the United Nations Universal Declaration of Human Rights.
+
+4. Downstream Provenance Integrity: Any downstream modification, adaptation, or redistribution of these geometric primitives and software frameworks must preserve this entire Part 3 safeguard block intact, legally binding all future downstream recipients to these identical ethical boundaries.
+
 
 ================================================================================
 PART 4: COGNITIVE AND TECHNICAL BOUNDARY DISCLAIMER
