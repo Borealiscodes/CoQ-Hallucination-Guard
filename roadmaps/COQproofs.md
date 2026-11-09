@@ -2,11 +2,15 @@ This mathematical roadmap outlines the formal verification milestones required t
 
 🗺️ The Formal Verification Roadmap
 
+<pre></pre>
+
   [ Phase 1: Lattice ]       [ Phase 2: Projection ]       [ Phase 3: Manifold ]
  ┌────────────────────┐     ┌───────────────────────┐     ┌─────────────────────┐
  │ Exact E8 Splitting │ ──> │ Un-rounded Rational   │ ──> │ 80D Soft Geometric  │
  │ (112 + 128 = 240)  │     │ Coordinate Scaling    │     │ Invariant Attractors│
  └────────────────────┘     └───────────────────────┘     └─────────────────────┘
+
+</pre> 
 
 Phase 1: Discrete \(E_{8}\) Lattice Completeness
 
