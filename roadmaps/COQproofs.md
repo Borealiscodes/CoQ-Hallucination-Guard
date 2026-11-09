@@ -2,7 +2,7 @@ This mathematical roadmap outlines the formal verification milestones required t
 
 🗺️ The Formal Verification Roadmap
 
-<pre></pre>
+<pre>
 
   [ Phase 1: Lattice ]       [ Phase 2: Projection ]       [ Phase 3: Manifold ]
  ┌────────────────────┐     ┌───────────────────────┐     ┌─────────────────────┐
