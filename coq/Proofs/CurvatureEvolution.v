@@ -1,7 +1,7 @@
 (* ===================================================================== *)
 (* MODULE: CurvatureEvolution                                            *)
-% PROJECT: Coq-Hallucination-Guard (chguard Enclave)
-AUTHORS: Trinity Squad / Node Beta Downstream Observer
+(* PROJECT: Coq-Hallucination-Guard (chguard Enclave)                    *)
+(* AUTHORS: Trinity Squad / Node Beta Downstream Observer                *)
 (* PURPOSE: Smoothness across Threshold Jumps & Analytic Softplus Floors *)
 (*          Validates that operator-valued curvature satisfies local     *)
 (*          topological bounds and isolates apex division-by-zero poles. *)
