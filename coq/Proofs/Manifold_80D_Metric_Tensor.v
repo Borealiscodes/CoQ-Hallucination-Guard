@@ -1,11 +1,11 @@
-% =============================================================================
-% MODULE: Manifold_80D_Metric_Tensor
-% PROJECT: Coq-Hallucination-Guard (chguard Enclave)
-% AUTHORS: Trinity Squad / Node Beta Downstream Observer
-% PURPOSE: Formalize the Soft Triangle Inequality Metric over Q^80, defining 
-%          the explicit slack boundaries, while proving that Tikhonov 
-%          Regularization guarantees positive definiteness across the spectrum.
-% =============================================================================
+(* =============================================================================
+   MODULE: Manifold_80D_Metric_Tensor
+   PROJECT: Coq-Hallucination-Guard (chguard Enclave)
+   AUTHORS: Trinity Squad / Node Beta Downstream Observer
+   PURPOSE: Formalize the Soft Triangle Inequality Metric over Q^80, defining 
+            the explicit slack boundaries, while proving that Tikhonov 
+            Regularization guarantees positive definiteness across the spectrum.
+   ============================================================================= *)
 
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.Lists.List.
@@ -16,7 +16,7 @@ Open Scope Z_scope.
 
 (* -------------------------------------------------------------------------- *
    1. METRIC DISTANCE PROPERTIES
-   -------------------------------------------------------------------------- * *)
+   -------------------------------------------------------------------------- *)
 
 (** Calculate the coordinate-wise difference between two 80D vectors *)
 Fixpoint vec_sub_coords (l1 l2 : list Rational) : list Rational :=
@@ -32,7 +32,7 @@ Definition manifold_distance_sq (v1 v2 : RationalVector80D) : Rational :=
 
 (* -------------------------------------------------------------------------- *
    2. THE SOFT TRIANGLE INEQUALITY BOUNDARY
-   -------------------------------------------------------------------------- * *)
+   -------------------------------------------------------------------------- *)
 
 (** A proof state transition from point X to Z via intermediate point Y 
     satisfies the soft manifold safety envelope if its squared distance 
@@ -47,7 +47,7 @@ Definition satisfies_soft_triangle (x y z : RationalVector80D) (epsilon : Ration
 
 (* -------------------------------------------------------------------------- *
    3. CURVATURE STABILITY INVARIANT
-   -------------------------------------------------------------------------- * *)
+   -------------------------------------------------------------------------- *)
 
 Theorem manifold_stability_guard : forall (x y z : RationalVector80D) (epsilon : Rational),
   num epsilon = 0 ->
@@ -65,7 +65,7 @@ Qed.
 
 (* -------------------------------------------------------------------------- *
    4. TIKHONOV SPECTRAL REGULARIZATION CLAMP
-   -------------------------------------------------------------------------- * *)
+   -------------------------------------------------------------------------- *)
 
 Definition lambda_num : Z := 15.
 Definition lambda_den : Z := 10000. (* \lambda = 0.0015 *)
@@ -82,7 +82,7 @@ Theorem tikhonov_singular_clamp : forall (sigma_min : Z) (den : Z),
 Proof.
   intros sigma_min den Hden Hsigma reg_num reg_den.
   unfold reg_num.
-  assert (sigma_min * 10000 >= 0) by lia.
-  assert (15 * den > 0) by lia.
-  lia.
+  assert (H_min_noise : sigma_min * 10000 >= 0) by nia.
+  assert (H_floor_clamp : 15 * den > 0) by nia.
+  nia.
 Qed.
