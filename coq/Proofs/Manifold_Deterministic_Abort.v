@@ -1,11 +1,11 @@
-(* ========================================================================== *
-   MODULE: Manifold_Deterministic_Abort
-   PROJECT: Coq-Hallucination-Guard (chguard Enclave)
-   AUTHORS: Trinity Squad / Node Beta Downstream Observer
-   PURPOSE: Formalize the deterministic abort state machine and circuit breaker.
-            Prove that metric drift violations unconditionally trigger an 
-            un-bypassable Allostatic Isolation payload state.
-   ========================================================================== *)
+% =============================================================================
+% MODULE: Manifold_Deterministic_Abort
+% PROJECT: Coq-Hallucination-Guard (chguard Enclave)
+% AUTHORS: Trinity Squad / Node Beta Downstream Observer
+% PURPOSE: Formalise the deterministic abort state machine and circuit breaker.
+%          Prove that metric drift violations unconditionally trigger an 
+%          un-bypassable Allostatic Isolation payload state.
+% =============================================================================
 
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.Lists.List.
@@ -33,14 +33,13 @@ Inductive EnclaveStatus :=
 Definition evaluate_enclave_step 
     (origin old_pt new_pt : RationalVector80D) 
     (epsilon : Rational) : EnclaveStatus :=
-  if (if (let d_xz := manifold_distance_sq origin new_pt in
-          let d_xy := manifold_distance_sq origin old_pt in
-          let d_yz := manifold_distance_sq old_pt new_pt in
-          let path_sum := rat_add (rat_add d_xy d_yz) epsilon in
-          (num d_xz) * (den path_sum) <=? (num path_sum) * (den d_xz)) 
-      then true else false)
+  let d_xz := manifold_distance_sq origin new_pt in
+  let d_xy := manifold_distance_sq origin old_pt in
+  let d_yz := manifold_distance_sq old_pt new_pt in
+  let path_sum := rat_add (rat_add d_xy d_yz) epsilon in
+  if (num d_xz) * (den path_sum) <=? (num path_sum) * (den d_xz)
   then VerifiedState new_pt
-  with AllostaticAbort 15. (* 15 = 0x0F, mapping straight to the Zig stasis frame *)
+  else AllostaticAbort 15. (* 15 = 0x0F, mapping straight to the Zig stasis frame *)
 
 (* -------------------------------------------------------------------------- *
    3. VERIFYING THE TOTAL ISOLATION INVARIANT
@@ -69,5 +68,4 @@ Proof.
     contradiction H_violation.
   - (* True Branch: Metric failure guarantees transition to isolated stasis *)
     reflexivity.
-  Qed.
-
+Qed.
