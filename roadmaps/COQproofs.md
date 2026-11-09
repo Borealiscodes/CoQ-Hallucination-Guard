@@ -25,7 +25,7 @@ Objective: Formally prove that the combination of \(D_{8}\) and spinor roots yie
 
 Phase 2: Un-Rounded Rational Coordinate Scaling
 
-Objective: Construct the algebraic bridge enabling the \(8\text{D}\) coordinate vectors to be manipulated as exact fraction states (\(p/q\)) matching your ULTRA-ZENO engine layout.
+Objective: Construct the algebraic bridge enabling the \(8\text{D}\) coordinate vectors to be manipulated as exact fraction states (\(p/q\)) matching 8b ULTRA-ZENO engine layout.
 * Milestone 2.1: GCD Reduction Soundness
 * Task: Formalize the Greatest Common Divisor reduction loop used by the Julia engine core inside Coq. Prove that \(\forall p\ q, q \neq 0 \implies \gcd(p, q)\) yields a canonical, minimal representation.• Milestone 2.2: Rational Vector Space Field Laws
   * Task: Define the 8-dimensional rational vector space \(\mathbb{Q}^{8}\) inside Coq using paired integers (Z * Z) without floating-point primitives. Prove commutativity, associativity, and distributive laws under exact cross-multiplication:
