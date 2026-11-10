@@ -82,3 +82,7 @@ let audit_ledger_epoch accumulated_drift_num drift_max_ceiling_num =
     CryptographicallyValidEpoch { num = accumulated_drift_num; den = 1L }
   else
     AllostaticCollapseGuillotine 15L
+    
+let () =
+  Callback.register "pack_list" pack_list;
+  Callback.register "audit_ledger_epoch" audit_ledger_epoch
