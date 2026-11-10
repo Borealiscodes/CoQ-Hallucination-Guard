@@ -1,6 +1,9 @@
 (* ===================================================================== *)
-(* Holonomy Stability: Unitarity and Metrics for Loop Transport          *)
-(* Formally verifies path-ordered loops stay structurally stable         *)
+(* MODULE: HolonomyStability                                             *)
+(* PROJECT: Coq-Hallucination-Guard (chguard Enclave)                    *)
+(* AUTHORS: Trinity Squad / Node Beta Downstream Observer                *)
+(* PURPOSE: Holonomy Stability: Unitarity and Metrics for Loop Transport *)
+(*          Formally verifies path-ordered loops stay structurally stable*)
 (* ===================================================================== *)
 From mathcomp Require Import ssreflect ssrbool ssrnat eqtype choice seq.
 From mathcomp Require Import Ralgebra.
@@ -23,13 +26,16 @@ Theorem holonomy_loop_unitarity_stable :
     all (fun t => trit_eq t TZero) loop_trace ->
     foldl (fun acc t => (trit_mul acc t)) TPlus loop_trace = TPlus.
 Proof.
-  move=> loop_trace /allP H_zero.
-  elim: loop_trace H_zero => [|t tl IH] H_zero /=.
+  move=> loop_trace.
+  elim: loop_trace => [|t tl IH] /=.
+    (* Base Case: Empty Loop Trace *)
     by [].
-  have /eqP ->: trit_eq t TZero by apply: H_zero; left.
+  (* Inductive Step: Commutative Map Isolation *)
+  move=> /andP [/eqP H_t_zero H_all_tl].
+  rewrite H_t_zero.
+  (* Unfold the balanced ternary multiplication ring natively *)
   rewrite /=.
-  apply: IH => x H_in.
-  by apply: H_zero; right.
+  by apply: IH.
 Qed.
 
 End HolonomyStability.
