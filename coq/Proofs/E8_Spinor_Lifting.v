@@ -9,9 +9,11 @@
 
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.Lists.List.
+Require Import Coq.micromega.Lia.
 Require Import E8_Gosset_Geometry.
 Require Import Ultra_Zeno_Rational_Math.
 
+Import ListNotations.
 Open Scope Z_scope.
 
 (* -------------------------------------------------------------------------- *
@@ -23,24 +25,28 @@ Open Scope Z_scope.
 Definition lift_to_half (x : Z) : Rational.
 Proof.
   refine {| num := x; den := 2 |}.
-  compute. easy.
+  lia.
 Defined.
 
 Fixpoint lift_list_to_half (l : list Z) : list Rational :=
   match l with
-  | nil => nil
+  | [] => []
   | x :: xs => lift_to_half x :: lift_list_to_half xs
-  | end.
+  end.
+
+Lemma lift_list_length : forall (l : list Z),
+  length (lift_list_to_half l) = length l.
+Proof.
+  induction l; simpl; try reflexivity.
+  rewrite IHl. reflexivity.
+Qed.
 
 (** Lift an integer-based 8D Coordinate into the Rational Vector Space *)
 Definition lift_spinor_vector (c : Coordinate8D) : RationalVector8D.
 Proof.
   refine {| v_coords := lift_list_to_half (coords c) |}.
-  abstract (
-    destruct c as [l Hlen]; simpl;
-    induction l; simpl; [discriminate |];
-    inversion Hlen; factor_out; auto
-  ).
+  rewrite lift_list_length.
+  apply len_proof.
 Defined.
 
 (* -------------------------------------------------------------------------- *
@@ -52,11 +58,22 @@ Defined.
 Lemma spinor_component_sq : forall (x : Z),
   x = -1 \/ x = 1 ->
   rat_eq (rat_mul (lift_to_half x) (lift_to_half x)) 
-         {| num := 1; den := 4; den_pos := ltac:(compute; easy) |}.
+         {| num := 1; den := 4; den_pos := ltac:(lia) |}.
 Proof.
   intros x H.
   unfold rat_eq, rat_mul, lift_to_half; simpl.
-  destruct H; subst; reflexivity.
+  destruct H; subst; lia.
+Qed.
+
+Lemma sum_sq_rat_lift_prop : forall (l : list Z),
+  let r_sum := sum_sq_rat (lift_list_to_half l) in
+  (num r_sum) * 4 = (sum_sq l) * (den r_sum).
+Proof.
+  induction l as [| x xs IHxs]; simpl; intros.
+  - unfold sum_sq_rat; simpl. lia.
+  - unfold sum_sq_rat in *; simpl in *.
+    unfold lift_to_half, rat_mul, rat_add in *; simpl in *.
+    lia.
 Qed.
 
 (** Core Theorem: Prove that any discrete spinor root vector, when lifted
@@ -65,17 +82,17 @@ Qed.
 Theorem lifted_spinor_norm_is_two : forall (c : Coordinate8D),
   is_spinor_root c ->
   let v_lifted := lift_spinor_vector c in
-  rat_eq (rat_norm_sq v_lifted) {| num := 2; den := 1; den_pos := ltac:(compute; easy) |}.
+  rat_eq (rat_norm_sq v_lifted) {| num := 2; den := 1; den_pos := ltac:(lia) |}.
 Proof.
-  intros c Hspin.
-  destruct Hspin as [Hforall [Hnorm Hparity]].
-  unfold rat_norm_sq.
-  (* The sum of squares of the 8 half-integers yields 8 * (1/4) = 8/4 *)
-  (* Cross-multiplication confirms that 8/4 is equivalent to 2/1 (8*1 = 4*2) *)
-  destruct c as [l Hlen]; simpl in *.
-  (* This step maps across the 8 elements, collapsing the fractions exactly *)
+  intros c Hspin v_lifted.
+  unfold v_lifted, lift_spinor_vector.
+  unfold rat_norm_sq, is_spinor_root in *.
+  destruct Hspin as [_ [Hnorm _]].
+  unfold norm_sq in Hnorm.
   unfold rat_eq; simpl.
-  (* Structural cross-multiplication reduces the un-rounded math down to identities *)
-  rewrite Hnorm.
-  reflexivity.
+  
+  (* Instantiate our proportional mapping lemma across the list boundary *)
+  have H_prop := sum_sq_rat_lift_prop (coords c).
+  lia.
 Qed.
+
