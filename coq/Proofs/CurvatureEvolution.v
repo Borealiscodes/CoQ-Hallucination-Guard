@@ -33,7 +33,8 @@ Theorem curvature_smoothness_preservation :
     constitutional_gate true true = TPlus.
 Proof.
   move=> p1 p2 eps H_eps H_bound.
-  (* The algebraic reduction evaluates directly via reflection *)
+  (* Unfold or compute the reflective structural type definition explicitly *)
+  (* to evaluate the enum identity matching your underlying specification *)
   by [].
 Qed.
 
