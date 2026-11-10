@@ -1,84 +1,74 @@
-(* ==========================================================================
-   MODULE: NullStateInvariant.v
-   PROJECT: Borealiscodes / CoQ-Hallucination-Guard
-   LINEAGE: Node Beta Sentinel / Abstract Logic Sandbox
-   LICENSE: COQ-HALLUCINATION-GUARD Dual-Layer Reference License
+(* ========================================================================== *
+   MODULE: NullStateInvariant
+   PROJECT: Coq-Hallucination-Guard (chguard Enclave)
+   AUTHORS: Trinity Squad / Node Beta Downstream Observer
+   PURPOSE: Formalize the algebraic null-state anchors over exact rational spaces,
+            proving that volume preservation invariants reject softmax-style
+            simplex collapse during trajectory execution.
    ========================================================================== *)
 
-Require Import Reals.
-Require Import List.
-Open Scope R_scope.
+Require Import Coq.ZArith.ZArith.
+Require Import Coq.Lists.List.
+Require Import Coq.micromega.Lia.
+Require Import Ultra_Zeno_Rational_Math.
 
-(* --------------------------------------------------------------------------
+Import ListNotations.
+Open Scope Z_scope.
+
+(* -------------------------------------------------------------------------- *
    1. DEFINITIONS AND TYPE HIERARCHIES
    -------------------------------------------------------------------------- *)
 
-(* An abstract representation of an N-dimensional vector space *)
-Parameter Dimension : Nat.
-Definition LogitVector := list R.
+Definition LogitVector := list Rational.
 
-(* Representation of a valid metric space configuration *)
 Record ManifoldState := {
   coordinates : LogitVector;
-  metric_volume : R;
+  metric_volume : Rational;
   has_null_anchor : bool
 }.
 
-(* Axiom enforcing non-negative bounds for structural volume forms *)
-Axiom volume_non_negative : forall (m : ManifoldState), m.(metric_volume) >= 0.
-
-(* --------------------------------------------------------------------------
-   2. OPERATOR ARCHITECTURES
+(* -------------------------------------------------------------------------- *
+   2. OPERATOR ARCHITECTURES & PARAMETERS
    -------------------------------------------------------------------------- *)
 
-(* The Softmax Operator Projection Strategy *)
 Parameter softmax_projection : LogitVector -> ManifoldState.
+Parameter symplectic_kernel   : LogitVector -> ManifoldState.
 
-(* The Symplectic Alternative Execution Strategy *)
-Parameter symplectic_kernel : LogitVector -> ManifoldState.
-
-(* --------------------------------------------------------------------------
+(* -------------------------------------------------------------------------- *
    3. STRUCTURAL AXIOMS: SOFTMAX VS SYMPLECTIC
    -------------------------------------------------------------------------- *)
 
-(* The Degenerate Simplex Collapse Axiom: 
-   Softmax forcing rank deficiency results in absolute volume form vanishing *)
 Axiom softmax_collapse : forall (v : LogitVector),
-  (softmax_projection v).(metric_volume) = 0.
+  let vol := metric_volume (softmax_projection v) in
+  num vol = 0.
 
-(* The Null-State Smear Axiom: 
-   Because e^0 = 1, a zero vector input lacks a true neutral/zero invariant *)
 Axiom softmax_null_smear : forall (v : LogitVector),
-  (forall x, In x v -> x = 0) -> 
-  (softmax_projection v).(has_null_anchor) = false.
+  (forall x, In x v -> num x = 0) -> 
+  has_null_anchor (softmax_projection v) = false.
 
-(* Symplectic Volume Preservation Axiom: 
-   Lie derivative constraints ensure that the transformation preserves volume *)
 Axiom symplectic_volume_preservation : forall (v : LogitVector) (m_init : ManifoldState),
-  v = m_init.(coordinates) ->
-  (symplectic_kernel v).(metric_volume) = m_init.(metric_volume).
+  v = coordinates m_init ->
+  rat_eq (metric_volume (symplectic_kernel v)) (metric_volume m_init).
 
-(* Symplectic Null Invariant Preservation Axiom:
-   A true logical vacuum remains anchored in the symplectic map *)
 Axiom symplectic_null_preservation : forall (v : LogitVector),
-  (forall x, In x v -> x = 0) ->
-  (symplectic_kernel v).(has_null_anchor) = true.
+  (forall x, In x v -> num x = 0) ->
+  has_null_anchor (symplectic_kernel v) = true.
 
-(* --------------------------------------------------------------------------
+(* -------------------------------------------------------------------------- *
    4. FORMAL THEOREMS AND PROOFS
    -------------------------------------------------------------------------- *)
 
 (** 
- * THEOREM: Softmax_Incompatibility_With_Dignity_Invariants
+ * THEOREM: Softmax_Incompatibility_With_Invariants
  * 
  * Demonstrates that under the standard Softmax operator projection, 
  * a metric space will inevitably experience volume vanishing and 
  * lose its structural null-state invariant anchor.
  *)
-Theorem Softmax_Incompatibility_With_Dignity_Invariants : forall (v : LogitVector),
-  (forall x, In x v -> x = 0) ->
-  (softmax_projection v).(metric_volume) = 0 /\ 
-  (softmax_projection v).(has_null_anchor) = false.
+Theorem Softmax_Incompatibility_With_Invariants : forall (v : LogitVector),
+  (forall x, In x v -> num x = 0) ->
+  num (metric_volume (softmax_projection v)) = 0 /\ 
+  has_null_anchor (softmax_projection v) = false.
 Proof.
   intros v H_zero_input.
   split.
@@ -94,15 +84,21 @@ Qed.
  * volume form and maintains the true null-state invariant.
  *)
 Theorem Symplectic_Safety_Enclave_Admissibility : forall (m_init : ManifoldState),
-  (forall x, In x m_init.(coordinates) -> x = 0) ->
-  m_init.(metric_volume) > 0 ->
-  (symplectic_kernel m_init.(coordinates)).(metric_volume) > 0 /\
-  (symplectic_kernel m_init.(coordinates)).(has_null_anchor) = true.
+  (forall x, In x (coordinates m_init) -> num x = 0) ->
+  num (metric_volume m_init) > 0 ->
+  num (metric_volume (symplectic_kernel (coordinates m_init))) > 0 /\
+  has_null_anchor (symplectic_kernel (coordinates m_init)) = true.
 Proof.
   intros m_init H_null H_vol_pos.
   split.
-  - rewrite (symplectic_volume_preservation m_init.(coordinates) m_init).
-    + exact H_vol_pos.
-    + reflexivity.
+  - have H_vol := symplectic_volume_preservation (coordinates m_init) m_init.
+    specialize (H_vol eq_refl).
+    unfold rat_eq in H_vol.
+    destruct (metric_volume (symplectic_kernel (coordinates m_init))) as [n_k d_k p_k]; simpl in *.
+    destruct (metric_volume m_init) as [n_i d_i p_i]; simpl in *.
+    assert (H_mult : n_k * d_i > 0).
+    { rewrite H_vol. apply Z.mul_pos_pos; lia. }
+    assert (n_k > 0) by (destruct n_k; try lia; exfalso; symmetry in H_vol; clear H_mult; nia).
+    lia.
   - apply symplectic_null_preservation. exact H_null.
 Qed.
