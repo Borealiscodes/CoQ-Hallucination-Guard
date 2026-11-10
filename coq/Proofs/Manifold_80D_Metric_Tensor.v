@@ -9,6 +9,7 @@
 
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.Lists.List.
+Require Import Coq.micromega.Lia.
 Require Import Ultra_Zeno_Rational_Math.
 Require Import Manifold_80D_Embedding.
 
@@ -82,6 +83,7 @@ Theorem tikhonov_singular_clamp : forall (sigma_min : Z) (den : Z),
 Proof.
   intros sigma_min den Hden Hsigma reg_num reg_den.
   unfold reg_num.
+  (* Close the assertion scopes with explicit tactical proofs to prevent compiler hangs *)
   assert (H_min_noise : sigma_min * 10000 >= 0) by nia.
   assert (H_floor_clamp : 15 * den > 0) by nia.
   nia.
