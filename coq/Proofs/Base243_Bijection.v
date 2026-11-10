@@ -2,8 +2,9 @@
    MODULE: Base243_Bijection
    PROJECT: Coq-Hallucination-Guard (chguard Enclave)
    AUTHORS: Trinity Squad / Node Beta Downstream Observer
-   PURPOSE: Formalise and prove the exact round-trip bijection for packing
-            and unpacking 5 balanced trits into a single Base-243 unsigned byte.
+   PURPOSE: Inductive, scale-invariant list-based verification of the 
+            Base-243 balanced-ternary round-trip packing bijection.
+            Eliminates exponential case explosion and locks c_bounds tracking.
    ========================================================================== *)
 
 Require Import Coq.ZArith.ZArith.
@@ -13,64 +14,69 @@ Require Import Coq.micromega.Lia.
 Open Scope Z_scope.
 
 (* -------------------------------------------------------------------------- *
-   1. TYPE DEFINITIONS FOR A 5-TRIT CHUNK
+   1. INDUCTIVE ALGEBRAIC COGNITIVE TYPES
    -------------------------------------------------------------------------- *)
 
 Definition trit_bounded (t : Z) : Prop := t = -1 \/ t = 0 \/ t = 1.
 
-Record TritChunk5 := {
-  c_trits : list Z;
-  c_len   : length c_trits = 5%nat;
+Record TritChunk (n : nat) := {
+  c_trits  : list Z;
+  c_len    : length c_trits = n;
   c_bounds : Forall trit_bounded c_trits
 }.
 
-Definition shift_t (t : Z) : Z := t + 1.
-Definition unshift_t (v : Z) : Z := v - 1.
-
 (* -------------------------------------------------------------------------- *
-   2. BIJECTIVE PACKING & UNPACKING ENGINES
+   2. RECURSIVE PACKING & UNPACKING CODEC ENGINES
    -------------------------------------------------------------------------- *)
 
-(** Pack 5 structural balanced trits into a single scalar bound [0..242] *)
-Definition pack_5 (t0 t1 t2 t3 t4 : Z) : Z :=
-  (shift_t t0) * 1 +
-  (shift_t t1) * 3 +
-  (shift_t t2) * 9 +
-  (shift_t t3) * 27 +
-  (shift_t t4) * 81.
+Fixpoint pack_list (l : list Z) : Z :=
+  match l with
+  | nil => 0
+  | t :: ts => (t + 1) + 3 * (pack_list ts)
+  end.
 
-(** Unpack a Base-243 scalar value back into its 5 component shifted values *)
-Definition unpack_5_v0 (v : Z) : Z := unshift_t (v mod 3).
-Definition unpack_5_v1 (v : Z) : Z := unshift_t ((v / 3) mod 3).
-Definition unpack_5_v2 (v : Z) : Z := unshift_t ((v / 9) mod 3).
-Definition unpack_5_v3 (v : Z) : Z := unshift_t ((v / 27) mod 3).
-Definition unpack_5_v4 (v : Z) : Z := unshift_t ((v / 81) mod 3).
+Fixpoint unpack_list (v : Z) (len : nat) : list Z :=
+  match len with
+  | O => nil
+  | S n => ((v mod 3) - 1) :: unpack_list (v / 3) n
+  end.
 
 (* -------------------------------------------------------------------------- *
-   3. THE INDUCTIVE ROUND-TRIP INVARIANT INVERSION PROOF
-   -------------------------------------------------------------------------- * *)
+   3. INDUCTIVE CORRECTNESS LEMMAS
+   -------------------------------------------------------------------------- *)
 
-Theorem base243_bijective_recovery : forall (t0 t1 t2 t3 t4 : Z),
-  trit_bounded t0 ->
-  trit_bounded t1 ->
-  trit_bounded t2 ->
-  trit_bounded t3 ->
-  trit_bounded t4 ->
-  let packed := pack_5 t0 t1 t2 t3 t4 in
-  unpack_5_v0 packed = t0 /\
-  unpack_5_v1 packed = t1 /\
-  unpack_5_v2 packed = t2 /\
-  unpack_5_v3 packed = t3 /\
-  unpack_5_v4 packed = t4.
+Lemma pack_unpack_step_invariant : forall (t : Z) (l : list Z),
+  trit_bounded t ->
+  (pack_list (t :: l) mod 3) - 1 = t /\
+  pack_list (t :: l) / 3 = pack_list l.
 Proof.
-  intros t0 t1 t2 t3 t4 H0 H1 H2 H3 H4 packed.
-  unfold packed, pack_5, unpack_5_v0, unpack_5_v1, unpack_5_v2, unpack_5_v3, unpack_5_v4, shift_t, unshift_t.
-  unfold trit_bounded in *.
-  
-  (* Destruct all 5 trits into their explicit bounded alphabets to evaluate the modular ring *)
-  repeat match goal with
+  intros t l H_bound.
+  unfold pack_list.
+  unfold trit_bounded in H_bound.
+  destruct H_bound as [-> | [-> | ->]]; split; try (rewrite Z.add_assoc); 
+    try (rewrite Z_div_plusr by lia); try (rewrite Z_mod_plusr by lia); auto.
+Qed.
 
-  | [ H : _ = -1 \/ _ = 0 \/ _ = 1 |- _ ] => destruct H as [-> | [-> | ->]]
-  end;
-  split; [| split; [| split; [| split]]]; try lia.
+(* -------------------------------------------------------------------------- *
+   4. THE RECURSIVE ROUND-TRIP BIJECTION PROOF
+   -------------------------------------------------------------------------- *)
+
+Theorem base243_inductive_bijection : forall (n : nat) (chunk : TritChunk n),
+  unpack_list (pack_list (c_trits n chunk)) n = c_trits n chunk.
+Proof.
+  intros n chunk.
+  destruct chunk as [l H_len H_bounds].
+  generalize dependent n.
+  induction l as [| t ts IHts]; intros n H_len.
+  - (* Base Case: Empty List (Null Telemetry) *)
+    simpl in H_len; subst n.
+    simpl. reflexivity.
+  - (* Inductive Step: Commutative Map Isolation *)
+    simpl in H_len; subst n.
+    inversion H_bounds as [| ? ? H_t_bound H_ts_bounds]; subst.
+    simpl.
+    destruct (pack_unpack_step_invariant t ts H_t_bound) as [H_mod H_div].
+    rewrite H_mod.
+    rewrite H_div.
+    rewrite IHts with (n := length ts); auto.
 Qed.
