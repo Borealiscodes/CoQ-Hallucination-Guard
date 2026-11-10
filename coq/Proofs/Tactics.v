@@ -2,52 +2,48 @@
    MODULE: Tactics
    PROJECT: Coq-Hallucination-Guard (chguard Enclave)
    AUTHORS: Trinity Squad / Node Beta Downstream Observer
-   PURPOSE: High-efficiency Ltac automation routines to eliminate 
-            boilerplate arithmetic and modular evaluation across the 
-            80D manifold and discrete ternary lattice proofs.
+   PURPOSE: Enhanced high-efficiency Ltac automation routines for linear 
+            list induction and thermodynamic dissipation monotonicity.
    ========================================================================== *)
 
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.Lists.List.
+Require Import Coq.micromega.Lia.
+
 Open Scope Z_scope.
 
 (** 
   Tactic: chguard_crush
-  Automatically destructs bounded ternary inputs, linearizes nested 
-  integer divisions/modulos, and clears trivial algebraic equations 
-  using Coq's decision procedures.
+  Constructively clears structural conditions, automatically inverts 
+  recursive list Forall boundaries, and handles modular arithmetic.
 *)
 Ltac chguard_crush :=
-  (* 1. Introspect all active assumptions and clear trivial equalities *)
-  intros; 
+  intros;
   simpl in *;
   
-  (* 2. Find and automatically break down any balanced ternary bounds declarations *)
+  (* 1. Invert recursive Forall bounds declarations sequentially *)
   repeat match goal with
 
-    | [ H : _ = -1 \/ _ = 0 \/ _ = 1 |- _ ] => destruct H as [-> | [-> | ->]]
     | [ H : Forall _ nil |- _ ] => clear H
     | [ H : Forall _ (_ :: _) |- _ ] => inversion H; clear H; subst
+    | [ H : _ /\ _ |- _ ] => destruct H
   end;
-
-  (* 3. Clean up modular arithmetic rings using Omega/Zify rules *)
-  try autorewrite with zsimplify in *;
   
-  (* 4. Attempt to resolve linear integer goals automatically *)
-  try bias; 
+  (* 2. Clear trivial equalities and leverage lia over integer rings *)
   try easy;
   try ring;
   try lia.
 
 (** 
-  Macro Tactic: step_manifold
-  Enforces structural invariant projection tracking across coordinate steps. 
+  Tactic: verify_dissipation_step
+  Automates the thermodynamic dissipation step check: F(s_{t+1}) <= F(s_t).
+  Inverts the step transition relation and forces linear boundary reduction.
 *)
-Ltac step_manifold dim :=
-  unfold dim in *;
+Ltac verify_dissipation_step :=
+  chguard_crush;
   match goal with
 
-  | [ |- context[Z.modulo _ 3] ] => rewrite Z.add_mod_idemp_l by easy
+  | [ H : ?F_next <= ?F_curr |- ?F_next - 1 < ?F_curr ] => lia
   | _ => idtac
-  end;
-  chguard_crush.
+  end.
+
