@@ -10,6 +10,7 @@
 Require Import Coq.Lists.List.
 Require Import Coq.ZArith.ZArith.
 Require Import Coq.Init.Nat.
+Require Import Coq.micromega.Lia.
 
 Import ListNotations.
 Open Scope Z_scope.
@@ -23,7 +24,7 @@ Open Scope Z_scope.
     - Spinor roots use half-integers represented as numerator over 2. *)
 Record Coordinate8D := {
   coords : list Z;
-  len_proof : length coords = 8
+  len_proof : length coords = 8%nat
 }.
 
 (** Compute the squared Euclidean norm of an 8D coordinate sequence *)
@@ -31,7 +32,7 @@ Fixpoint sum_sq (l : list Z) : Z :=
   match l with
   | [] => 0
   | x :: xs => (x * x) + sum_sq xs
-  | end.
+  end.
 
 Definition norm_sq (c : Coordinate8D) : Z :=
   sum_sq (coords c).
@@ -58,7 +59,7 @@ Fixpoint count_negative (l : list Z) : nat :=
   match l with
   | [] => 0%nat
   | x :: xs => if x <? 0 then S (count_negative xs) else count_negative xs
-  | end.
+  end.
 
 Definition is_spinor_root (c : Coordinate8D) : Prop :=
   Forall (fun x => x = -1 \/ x = 1) (coords c) /\
@@ -83,13 +84,14 @@ Inductive E8_root : Coordinate8D -> Prop :=
 Theorem E8_root_disjoint : forall c,
   is_D8_root c -> is_spinor_root c -> False.
 Proof.
-  intros c [_ HD8] [HSpin [HNorm _]].
-  destruct c as [l Hlen]. simpl in *.
-  (* Spinor roots enforce all coordinates are +/- 1, making the sum of squares 8 *)
-  (* D8 roots enforce the norm_sq is 2, creating an immediate contradiction *)
+  intros c H_D8 H_spinor.
+  unfold is_D8_root, is_spinor_root in *.
+  destruct H_D8 as [_ HD8].
+  destruct H_spinor as [_ [HNorm _]].
+  unfold norm_sq in *.
   rewrite HD8 in HNorm.
-  discriminate.
-  Qed.
+  lia.
+Qed.
 
 (** Operational boundary constraint tracking parameter state totals *)
 Record E8_Enclave_State := {
@@ -106,9 +108,7 @@ Record E8_Enclave_State := {
 Theorem verify_e8_cage_bounds : forall (state : E8_Enclave_State),
   e8_kissing_number state = 240.
 Proof.
-  intros state.
-  rewrite (sum_invariant state).
-  rewrite (d8_invariant state).
-  rewrite (spinor_invariant state).
-  reflexivity.
-  Qed.
+  intros [d8 spin total H_d8 H_spin H_sum].
+  simpl in *.
+  lia.
+Qed.
