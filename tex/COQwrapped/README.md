@@ -27,6 +27,16 @@ All proofs operate strictly at the **formal mathematical and systems-engineering
 
 ---
 
+## Epistemic Honesty & Methodological Scope
+
+In keeping with `NDH-Meta-Systems` and `Eight-Fold-Filter` epistemic humility standards, this formalization suite explicitly states both what these proofs accomplish and what they do not:
+
+1. **Exposing Minimal Mathematical Mechanics:** Formalizing prose arguments in Coq strips away rhetorical decoration and clinical baggage. These modules demonstrate that the underlying boundary, drift, and capacity claims reduce to elementary real-number inequalities, induction, and the Archimedean property—requiring zero psychiatric framing to hold.
+2. **Surfacing Hidden Assumptions:** Proof assistants forbid unstated premises. Every structural collapse or safety guarantee in these files holds *only* when its explicit top-level `Hypothesis` declarations (such as non-decaying demand steps $D_t \ge \delta$ or asymmetric verification costs $L_{\text{edge}} \le v_{\text{edge}}$) are satisfied in the target environment.
+3. **Specification Guards, Not Semantic Oracles:** Compact Coq proofs (50–150 lines) certify deterministic consistency at architectural boundaries (such as ensuring filtered streams emit zero `SpeculativeJargon` tokens). They do not prevent open-ended LLM hallucination outside verified seams, nor do they substitute for human editorial judgment or legal attribution enforcement.
+
+---
+
 ## Local Verification (`coqc`)
 
 To verify all modules locally with the Coq compiler (tested with Coq 8.18+):
